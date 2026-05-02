@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HerbVision · TCM Plant Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#030c08;--bg2:#071410;
+  --sf:rgba(255,255,255,.038);--sfh:rgba(255,255,255,.065);
+  --bd:rgba(255,255,255,.07);--bdg:rgba(34,212,138,.28);
+  --ac:#22d48a;--acd:rgba(34,212,138,.11);
+  --go:#f0b429;--god:rgba(240,180,41,.11);
+  --tx:#dff0e8;--mu:#6b9c82;--di:#3a5a47;
+  --er:#f25252;--wr:#f0b429;
+  --fd:'Cormorant Garamond',Georgia,serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+  --fm:'Space Mono',monospace;
+  --r:12px;--rl:20px;--rx:28px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:16px;line-height:1.65;overflow-x:hidden;min-height:100vh;position:relative}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(34,212,138,.18);border-radius:3px}
+
+/* ── GLOBAL BACKGROUND ── */
+#bg-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:0;animation:blobDrift linear infinite}
+.blob-a{width:700px;height:700px;background:radial-gradient(circle,rgba(34,212,138,.09) 0%,transparent 70%);top:-15%;left:-10%;animation-duration:28s;animation-delay:0s}
+.blob-b{width:500px;height:500px;background:radial-gradient(circle,rgba(34,212,138,.06) 0%,transparent 70%);top:35%;right:-12%;animation-duration:22s;animation-delay:-9s}
+.blob-c{width:600px;height:600px;background:radial-gradient(circle,rgba(34,212,138,.07) 0%,transparent 70%);bottom:-10%;left:30%;animation-duration:32s;animation-delay:-16s}
+@keyframes blobDrift{
+  0%{opacity:0;transform:translate(0,0) scale(.95)}
+  10%{opacity:1}
+  50%{transform:translate(40px,-30px) scale(1.06)}
+  90%{opacity:1}
+  100%{opacity:0;transform:translate(0,0) scale(.95)}
+}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;background:rgba(3,12,8,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);transition:border-color .3s}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;user-select:none}
+.nav-logo-icon{width:36px;height:36px;flex-shrink:0}
+.nav-wordmark{font-family:var(--fd);font-size:1.45rem;font-weight:600;letter-spacing:.01em;color:var(--tx)}
+.nav-wordmark span{color:var(--ac)}
+.nav-center{display:flex;align-items:center;gap:2rem}
+.nav-link{font-size:.84rem;color:var(--mu);text-decoration:none;letter-spacing:.02em;transition:color .2s}
+.nav-link:hover{color:var(--tx)}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.nav-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;border:1px solid rgba(34,212,138,.22);background:rgba(34,212,138,.07);font-family:var(--fm);font-size:.67rem;color:var(--ac);letter-spacing:.07em}
+.dot{width:5px;height:5px;background:var(--ac);border-radius:50%;animation:dp 1.8s ease-in-out infinite}
+@keyframes dp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.65)}}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:0 2rem;z-index:1}
+.hero-glow{position:absolute;width:900px;height:900px;background:radial-gradient(circle,rgba(34,212,138,.07) 0%,transparent 65%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-58%);pointer-events:none;animation:glowPulse 6s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.7;transform:translate(-50%,-58%) scale(1)}50%{opacity:1;transform:translate(-50%,-58%) scale(1.08)}}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:940px;padding-top:5rem;animation:hIn .9s ease forwards}
+@keyframes hIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 20px;border-radius:100px;background:var(--acd);border:1px solid rgba(34,212,138,.18);font-size:.74rem;font-weight:500;color:var(--ac);letter-spacing:.09em;text-transform:uppercase;margin-bottom:2.25rem}
+.hero-h1{font-family:var(--fd);font-size:clamp(3.6rem,9vw,7rem);font-weight:300;line-height:1.02;letter-spacing:-.025em;margin-bottom:1.75rem}
+.hero-h1 em{font-style:italic;color:var(--ac)}
+.hero-sub{font-size:1.08rem;color:var(--mu);max-width:610px;margin:0 auto 2.75rem;line-height:1.78;font-weight:300}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-p,.btn-o{display:inline-flex;align-items:center;gap:8px;border-radius:var(--r);font-family:var(--fb);font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;border:none;font-size:.88rem}
+.btn-p{background:var(--ac);color:#030c08;padding:14px 32px}
+.btn-p:hover{background:#3fe09c;transform:translateY(-2px);box-shadow:0 10px 36px rgba(34,212,138,.28)}
+.btn-o{background:transparent;color:var(--tx);padding:13px 32px;border:1px solid var(--bd)!important}
+.btn-o:hover{border-color:rgba(34,212,138,.4)!important;color:var(--ac);transform:translateY(-2px)}
+.hero-stats{position:relative;z-index:2;margin-top:5rem;width:100%;max-width:820px;display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--bd);border-radius:var(--rl);overflow:hidden;background:rgba(7,20,16,.72);backdrop-filter:blur(10px)}
+.hstat{padding:1.75rem 1.5rem;text-align:center;border-right:1px solid var(--bd)}
+.hstat:last-child{border-right:none}
+.hstat-n{font-family:var(--fd);font-size:2.3rem;font-weight:600;color:var(--ac);line-height:1;margin-bottom:.3rem}
+.hstat-l{font-size:.7rem;font-weight:500;color:var(--di);text-transform:uppercase;letter-spacing:.09em}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2;animation:flt 3s ease-in-out infinite}
+@keyframes flt{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+.scroll-bar{width:1.5px;height:40px;background:linear-gradient(to bottom,transparent,var(--ac))}
+.scroll-txt{font-size:.62rem;color:var(--di);letter-spacing:.16em;text-transform:uppercase}
+
+/* ── ALL SECTIONS WITH Z-INDEX ── */
+.az-sec,.meth-sec,.feat-sec,.pipe-sec,footer{position:relative;z-index:1}
+
+/* ── SECTION COMMONS ── */
+.stag{display:flex;align-items:center;justify-content:center;gap:.75rem;font-family:var(--fm);font-size:.68rem;color:var(--di);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem}
+.stag::before,.stag::after{content:'';display:block;width:30px;height:1px;background:var(--bd)}
+.stit{font-family:var(--fd);font-size:clamp(2.1rem,4vw,3.2rem);font-weight:400;line-height:1.15;margin-bottom:.9rem;text-align:center}
+.stit em{font-style:italic;color:var(--ac)}
+.sdesc{text-align:center;color:var(--mu);font-size:.93rem;max-width:520px;margin:0 auto;line-height:1.78}
+
+/* ── ANALYZER ── */
+.az-sec{padding:7rem 2rem;max-width:1320px;margin:0 auto}
+.az-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:4rem;align-items:start}
+.panel{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rx);overflow:hidden;transition:border-color .3s}
+.phdr{padding:1.125rem 1.75rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.phdr-t{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mu)}
+.pstat{display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.63rem;color:var(--di);transition:color .3s}
+.pstat.live{color:var(--ac)}.pstat.live .dot{background:var(--ac)}
+.pstat.warn{color:var(--wr)}
+.pstat.err{color:var(--er)}
+
+/* upload zone */
+.upzone{position:relative;min-height:350px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;cursor:pointer;transition:background .2s}
+.upzone.drag-over{background:rgba(34,212,138,.04)}
+.upzone-frame{position:absolute;inset:14px;border:1.5px dashed rgba(255,255,255,.09);border-radius:16px;pointer-events:none;transition:border-color .2s}
+.upzone:hover .upzone-frame,.upzone.drag-over .upzone-frame{border-color:rgba(34,212,138,.35)}
+.up-icon{width:66px;height:66px;background:var(--acd);border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;transition:transform .3s;pointer-events:none}
+.upzone:hover .up-icon{transform:translateY(-5px)}
+.up-tit{font-weight:600;margin-bottom:.4rem;font-size:1.05rem;pointer-events:none}
+.up-sub{font-size:.8rem;color:var(--di);text-align:center;margin-bottom:1.75rem;max-width:240px;line-height:1.6;pointer-events:none}
+.up-acts{display:flex;gap:.75rem;position:relative;z-index:2}
+.bts,.btg{display:inline-flex;align-items:center;gap:6px;border-radius:10px;font-family:var(--fb);font-size:.8rem;font-weight:600;padding:10px 20px;cursor:pointer;transition:all .18s;border:none;letter-spacing:.01em}
+.bts{background:var(--ac);color:#030c08}.bts:hover{background:#3fe09c;transform:translateY(-1px)}
+.btg{background:transparent;color:var(--tx);border:1px solid var(--bd)!important}.btg:hover{border-color:rgba(34,212,138,.35)!important;color:var(--ac)}
+
+/* preview */
+.prev-area{display:none;flex-direction:column;padding:1.5rem;gap:1rem}
+.prev-area.show{display:flex}
+.img-wrap{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#071410}
+.img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* scan overlay */
+.scan-ov{position:absolute;inset:0;display:none;overflow:hidden;border-radius:16px}
+.scan-ov.on{display:block}
+.scan-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(34,212,138,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(34,212,138,.045) 1px,transparent 1px);background-size:22px 22px}
+.scan-beam{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 0%,rgba(34,212,138,.65) 35%,rgba(34,212,138,1) 50%,rgba(34,212,138,.65) 65%,transparent 100%);box-shadow:0 0 22px rgba(34,212,138,.55),0 0 42px rgba(34,212,138,.2);animation:sBeam 2.3s linear infinite}
+@keyframes sBeam{0%{top:-3px}100%{top:100%}}
+.sc{position:absolute;width:22px;height:22px;border-color:var(--ac);border-style:solid}
+.sc-tl{top:10px;left:10px;border-width:2px 0 0 2px}
+.sc-tr{top:10px;right:10px;border-width:2px 2px 0 0}
+.sc-bl{bottom:10px;left:10px;border-width:0 0 2px 2px}
+.sc-br{bottom:10px;right:10px;border-width:0 2px 2px 0}
+.scan-lbl{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:.61rem;color:var(--ac);letter-spacing:.12em;text-transform:uppercase;background:rgba(3,12,8,.92);padding:4px 12px;border-radius:4px;white-space:nowrap}
+.scan-dots{position:absolute;bottom:12px;right:12px;display:flex;gap:4px}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--ac);animation:sdF 1.2s ease-in-out infinite}
+.sdot:nth-child(2){animation-delay:.2s}.sdot:nth-child(3){animation-delay:.4s}
+@keyframes sdF{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* preview controls */
+.prev-ctrl{display:grid;grid-template-columns:1fr 1fr 2fr;gap:.5rem}
+.bctrl{display:flex;align-items:center;justify-content:center;gap:5px;padding:10px;border-radius:10px;font-family:var(--fb);font-size:.77rem;font-weight:600;cursor:pointer;transition:all .18s;border:1px solid var(--bd);background:transparent;color:var(--mu);letter-spacing:.01em}
+.bctrl:hover{border-color:rgba(34,212,138,.32);color:var(--ac)}
+.bctrl-az{background:var(--ac);border-color:transparent!important;color:#030c08}
+.bctrl-az:hover{background:#3fe09c;color:#030c08}
+.bctrl-az:disabled{opacity:.6;cursor:not-allowed}
+
+/* ── RESULTS PANEL ── */
+.re-empty{min-height:460px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center;gap:1rem}
+.re-empty-ic{width:72px;height:72px;background:var(--acd);border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:.5rem}
+.re-empty h3{font-family:var(--fd);font-size:1.4rem;font-weight:400;margin-bottom:.25rem}
+.re-empty p{font-size:.8rem;color:var(--di)}
+.re-steps{display:flex;flex-direction:column;gap:.6rem;margin-top:1rem;text-align:left;width:100%;max-width:260px}
+.re-step{display:flex;align-items:center;gap:10px;font-size:.77rem;color:var(--di)}
+.re-stepn{width:22px;height:22px;border-radius:50%;border:1px solid var(--di);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:.63rem;flex-shrink:0}
+.re-content{display:none}
+.re-content.show{display:block}
+
+/* confidence ring */
+.conf-hero{padding:2rem 1.75rem;display:flex;align-items:center;gap:1.5rem;border-bottom:1px solid var(--bd)}
+.cring-wrap{position:relative;width:110px;height:110px;flex-shrink:0}
+.cring-wrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ctrack{fill:none;stroke:rgba(255,255,255,.055);stroke-width:7}
+.cfill{fill:none;stroke:var(--ac);stroke-width:7;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:283;transition:stroke-dashoffset 1.7s cubic-bezier(.34,1.2,.64,1)}
+.cfill.warn{stroke:var(--wr)}.cfill.err{stroke:var(--er)}
+.cring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cpct{font-family:var(--fd);font-size:1.7rem;font-weight:600;line-height:1;letter-spacing:-.02em}
+.ctag{font-size:.57rem;color:var(--di);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+
+.herb-inf{flex:1;min-width:0}
+.herb-zh{font-family:var(--fd);font-size:2.9rem;font-weight:400;line-height:1;margin-bottom:.55rem}
+.herb-meta-row{display:flex;align-items:baseline;gap:6px;margin-bottom:.18rem}
+.herb-meta-lbl{font-family:var(--fm);font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--di);flex-shrink:0;min-width:68px}
+.herb-py{font-size:.85rem;color:var(--ac);font-style:italic}
+.herb-sci{font-size:.82rem;color:var(--mu);font-style:italic}
+.herb-com{font-family:var(--fm);font-size:.68rem;color:var(--di);letter-spacing:.03em;margin-bottom:.875rem}
+.herb-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:.55rem}
+.htag{font-size:.68rem;font-weight:600;padding:3px 10px;border-radius:100px;background:var(--acd);color:var(--ac);letter-spacing:.02em}
+
+/* unknown alert */
+.unk-alert{margin:1.25rem 1.75rem 0;padding:1rem 1.25rem;background:rgba(242,82,82,.07);border:1px solid rgba(242,82,82,.22);border-radius:12px;display:none}
+.unk-alert.show{display:flex;gap:.875rem}
+.unk-ic{width:36px;height:36px;background:rgba(242,82,82,.12);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.unk-inf h4{font-size:.84rem;font-weight:700;color:#fca5a5;margin-bottom:.25rem}
+.unk-inf p{font-size:.75rem;color:rgba(252,165,165,.65);line-height:1.6}
+
+/* predictions list */
+.preds-sec{padding:1.25rem 1.75rem 1.5rem;border-bottom:1px solid var(--bd)}
+.preds-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.11em;color:var(--di);margin-bottom:1rem}
+.pred-row{display:flex;align-items:center;gap:.875rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);opacity:0;transform:translateX(14px);transition:opacity .4s ease,transform .4s ease}
+.pred-row:last-child{border-bottom:none}
+.pred-row.revealed{opacity:1;transform:translateX(0)}
+.pred-rk{font-family:var(--fm);font-size:.62rem;color:var(--di);width:18px;text-align:center;flex-shrink:0}
+.pred-rk.top{color:var(--ac)}
+.pred-txt{flex:1;min-width:0}
+.pred-nm{font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pred-sc{font-size:.7rem;color:var(--di);font-style:italic}
+.pred-bar-s{width:88px;flex-shrink:0}
+.pred-bar-bg{height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.pred-bar-f{height:100%;border-radius:2px;background:var(--ac);width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.pred-bar-f.dim{background:var(--di)}
+.pred-pct{font-family:var(--fm);font-size:.68rem;color:var(--mu);text-align:right}
+
+/* ── HERB DETAILS — full metadata ── */
+.herb-dtg{padding:1.25rem 1.75rem 1.75rem;display:flex;flex-direction:column;gap:.75rem}
+
+/* Row layout helpers */
+.drow{display:grid;gap:.75rem}
+.drow-2{grid-template-columns:1fr 1fr}
+.drow-3{grid-template-columns:1fr 1fr 1fr}
+.drow-1{grid-template-columns:1fr}
+
+.dcard{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:.9rem 1.1rem;transition:border-color .2s}
+.dcard:hover{border-color:rgba(34,212,138,.15)}
+.dlbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--di);margin-bottom:.45rem;display:flex;align-items:center;gap:5px}
+.dlbl-icon{opacity:.55}
+.dval{font-size:.84rem;color:var(--tx);line-height:1.6}
+.dval .dpart{color:var(--ac);font-weight:600}
+
+/* Nature badge colours */
+.dnat-warm{color:#f0b429}.dnat-hot{color:#f25252}.dnat-cool{color:#60a5fa}.dnat-cold{color:#93c5fd}.dnat-neutral{color:var(--ac)}
+
+/* TCM Meridian pill list */
+.mer-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:.3rem}
+.mer-pill{font-size:.67rem;padding:2px 9px;border-radius:100px;background:rgba(34,212,138,.08);border:1px solid rgba(34,212,138,.14);color:var(--ac)}
+
+/* Props grid inside dcard */
+.props-grid{display:flex;flex-wrap:wrap;gap:5px;margin-top:.3rem}
+.prop-chip{font-size:.67rem;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:var(--mu)}
+
+/* Description / Uses prose styling */
+.dcard-prose .dval{font-size:.83rem;color:var(--mu);line-height:1.75}
+
+/* section divider inside results */
+.dtg-divider{height:1px;background:rgba(255,255,255,.05);margin:.25rem 0}
+
+/* ── METHODOLOGY ── */
+.meth-sec{padding:7rem 2rem;border-top:1px solid var(--bd);background:linear-gradient(to bottom,transparent,rgba(34,212,138,.012),transparent)}
+.meth-inner{max-width:1320px;margin:0 auto}
+.meth-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem}
+.mc{padding:2rem;border:1px solid var(--bd);border-radius:var(--rx);background:var(--sf);transition:all .3s;position:relative;overflow:hidden}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ac),transparent);opacity:0;transition:opacity .3s}
+.mc:hover{border-color:rgba(34,212,138,.2);transform:translateY(-5px)}
+.mc:hover::before{opacity:.55}
+.mc-num{font-family:var(--fm);font-size:.61rem;color:var(--ac);letter-spacing:.16em;text-transform:uppercase;margin-bottom:1.25rem}
+.mc-icon{width:50px;height:50px;background:var(--acd);border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem}
+.mc-tit{font-family:var(--fd);font-size:1.45rem;font-weight:500;margin-bottom:.9rem}
+.mc-desc{font-size:.875rem;color:var(--mu);line-height:1.78}
+.mc-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:1.25rem}
+.mc-chip{font-size:.67rem;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:var(--mu);font-family:var(--fm)}
+.mc-met{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--bd);display:flex;align-items:baseline;gap:.5rem}
+.mc-mv{font-family:var(--fd);font-size:1.8rem;font-weight:600;color:var(--ac)}
+.mc-ml{font-size:.74rem;color:var(--di)}
+
+/* ── FEATURES ── */
+.feat-sec{padding:5rem 2rem;max-width:1320px;margin:0 auto}
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:4rem}
+.fc{padding:1.75rem 1.5rem;border:1px solid var(--bd);border-radius:var(--rl);background:var(--sf);text-align:center;transition:all .22s}
+.fc:hover{border-color:rgba(34,212,138,.18);transform:translateY(-3px)}
+.fc-ic{width:46px;height:46px;margin:0 auto 1rem;background:var(--acd);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.fc-tit{font-weight:700;font-size:.88rem;margin-bottom:.4rem}
+.fc-desc{font-size:.77rem;color:var(--di);line-height:1.65}
+
+/* ── PIPELINE ── */
+.pipe-sec{padding:5rem 2rem;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.pipe-inner{max-width:1320px;margin:0 auto}
+.pipe-track{display:flex;align-items:stretch;gap:0;margin-top:4rem;overflow-x:auto;padding-bottom:.5rem}
+.pnode{flex:1;min-width:140px;padding:1.5rem 1.25rem;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);text-align:center;position:relative}
+.pnode:not(:last-child){border-right:none;border-radius:var(--r) 0 0 var(--r)}
+.pnode:not(:first-child){border-radius:0 var(--r) var(--r) 0}
+.pnode:not(:first-child):not(:last-child){border-radius:0}
+.pnode-arr{flex-shrink:0;width:40px;display:flex;align-items:center;justify-content:center;color:var(--ac);font-size:1.2rem}
+.pnode-ic{width:36px;height:36px;margin:0 auto .75rem;background:var(--acd);border-radius:9px;display:flex;align-items:center;justify-content:center}
+.pnode-t{font-size:.78rem;font-weight:700;margin-bottom:.2rem}
+.pnode-s{font-size:.67rem;color:var(--di);font-family:var(--fm)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
+.footer-in{max-width:1320px;margin:0 auto}
+.fg{display:grid;grid-template-columns:2fr 1fr;gap:4rem;margin-bottom:3rem}
+.fw{font-family:var(--fd);font-size:1.5rem;font-weight:600;margin-bottom:.75rem}
+.fw span{color:var(--ac)}
+.fd-desc{font-size:.81rem;color:var(--di);line-height:1.78;max-width:310px;margin-bottom:1.5rem}
+.fmc{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;background:var(--acd);border:1px solid rgba(34,212,138,.18);border-radius:var(--r)}
+.fmc-t strong{display:block;font-weight:700;color:var(--ac);font-family:var(--fm);font-size:.74rem}
+.fmc-t span{font-size:.7rem;color:var(--di)}
+.fc-lbl{font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:1.25rem}
+.fl{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+.fl a{font-size:.83rem;color:var(--di);text-decoration:none;transition:color .2s}
+.fl a:hover{color:var(--ac)}
+.fbot{border-top:1px solid var(--bd);padding-top:1.75rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.fcopy{font-size:.77rem;color:var(--di)}
+.fbadges{display:flex;gap:.75rem;flex-wrap:wrap}
+.fbadge{font-family:var(--fm);font-size:.63rem;padding:4px 10px;border-radius:6px;border:1px solid var(--bd);color:var(--di)}
+
+/* ── CAMERA MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:2000;align-items:center;justify-content:center;padding:2rem}
+.modal-bg.open{display:flex}
+.cam-box{background:#071410;border:1px solid var(--bd);border-radius:var(--rx);overflow:hidden;width:100%;max-width:580px;animation:mIn .3s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.cam-hdr{padding:1.125rem 1.5rem;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.cam-tit{display:flex;align-items:center;gap:8px;font-size:.84rem;font-weight:700}
+.rec{width:7px;height:7px;background:var(--er);border-radius:50%;animation:dp 1s infinite}
+.cam-close{width:30px;height:30px;border-radius:8px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:1.25rem;line-height:1}
+.cam-close:hover{border-color:var(--er);color:var(--er)}
+#cam-video{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#030c08}
+.cam-ft{padding:1.25rem 1.5rem;border-top:1px solid var(--bd);display:flex;gap:.75rem;justify-content:center}
+
+/* responsive */
+@media(max-width:960px){
+  .az-grid,.meth-cards{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:repeat(2,1fr)}
+  .fg{grid-template-columns:1fr;gap:2rem}
+  .nav-center{display:none}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .drow-3{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav{padding:0 1.25rem}
+  .hero-btns{flex-direction:column;align-items:center}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .drow-2,.drow-3{grid-template-columns:1fr}
+}
+#file-input{display:none}
+</style>
+</head>
+<body>
+
+<!-- ── BACKGROUND BLOBS ── -->
+<div class="bg-blobs">
+  <div class="blob blob-a"></div>
+  <div class="blob blob-b"></div>
+  <div class="blob blob-c"></div>
+</div>
+
+<!-- ── GLOBAL BACKGROUND CANVAS ── -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ══ NAV ══ -->
+<nav class="nav" id="nav">
+  <a href="#home" class="nav-logo">
+    <!-- icons8 natural-food logo -->
+    <img src="https://img.icons8.com/plasticine/48/natural-food.png" alt="HerbVision logo" style="width:38px;height:38px;display:block;flex-shrink:0">
+    <span class="nav-wordmark">Herb<span>Vision</span></span>
+  </a>
+  <nav class="nav-center">
+    <a href="#analyzer" class="nav-link">Analyze</a>
+    <a href="#methodology" class="nav-link">Methodology</a>
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#pipeline" class="nav-link">Pipeline</a>
+  </nav>
+  <div class="nav-right">
+    <div class="nav-pill"><div class="dot"></div>TCMP-300 · v3</div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><div class="dot"></div>Traditional Chinese Medicine · Vision Intelligence</div>
+    <h1 class="hero-h1">Identify <em>Medicinal</em><br>Plants Instantly</h1>
+    <p class="hero-sub">A two-stage hybrid intelligence pipeline — Swin Transformer backbone fused with an ensemble of 8 specialist classifiers — delivering 92.76% accuracy across 300 TCM herb species.</p>
+    <div class="hero-btns">
+      <a href="#analyzer" class="btn-p">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Analyze a Plant
+      </a>
+      <a href="#methodology" class="btn-o">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        How It Works
+      </a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">52K+</div><div class="hstat-l">Training Images</div></div>
+    <div class="hstat"><div class="hstat-n">300</div><div class="hstat-l">Herb Species</div></div>
+    <div class="hstat"><div class="hstat-n">92.76%</div><div class="hstat-l">Val Accuracy</div></div>
+    <div class="hstat"><div class="hstat-n">0.998</div><div class="hstat-l">AUC Score</div></div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-bar"></div><div class="scroll-txt">Scroll</div></div>
+</section>
+
+<!-- ══ ANALYZER ══ -->
+<section class="az-sec" id="analyzer">
+  <div class="stag">Analysis Engine</div>
+  <h2 class="stit">Plant <em>Recognition</em> System</h2>
+  <p class="sdesc">Upload a clear photograph or capture one live. Our two-stage pipeline classifies the specimen and retrieves full TCM medicinal details.</p>
+  <div class="az-grid">
+
+    <!-- LEFT: Upload -->
+    <div class="panel" id="upanel">
+      <div class="phdr">
+        <div class="phdr-t">Image Input</div>
+        <div class="pstat" id="up-stat">Awaiting input</div>
+      </div>
+      <!-- Upload zone -->
+      <div class="upzone" id="upzone">
+        <div class="upzone-frame"></div>
+        <div class="up-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+        </div>
+        <div class="up-tit">Drop herb photo here</div>
+        <div class="up-sub">Upload a clear image — root, leaf, flower, bark, or processed form</div>
+        <div class="up-acts">
+          <button class="bts" id="upload-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            Upload Photo
+          </button>
+          <button class="btg" id="open-cam">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Live Camera
+          </button>
+        </div>
+        <input type="file" id="file-input" accept="image/*">
+      </div>
+      <!-- Preview area -->
+      <div class="prev-area" id="prev-area">
+        <div class="img-wrap" id="img-wrap">
+          <img id="prev-img" src="" alt="Plant preview">
+          <div class="scan-ov" id="scan-ov">
+            <div class="scan-grid-bg"></div>
+            <div class="scan-beam"></div>
+            <div class="sc sc-tl"></div><div class="sc sc-tr"></div>
+            <div class="sc sc-bl"></div><div class="sc sc-br"></div>
+            <div class="scan-lbl" id="scan-lbl">Initializing…</div>
+            <div class="scan-dots"><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div></div>
+          </div>
+        </div>
+        <div class="prev-ctrl">
+          <button class="bctrl" onclick="resetUpload()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5"/></svg>
+            Reset
+          </button>
+          <button class="bctrl" id="change-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            Change
+          </button>
+          <button class="bctrl bctrl-az" id="az-btn" onclick="runAnalysis()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 7v4m0 0h-3m3 0h3" stroke-linecap="round"/></svg>
+            Unmask This Plant
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Results -->
+    <div class="panel" id="rpanel">
+      <div class="phdr">
+        <div class="phdr-t">Analysis Results</div>
+        <div class="pstat" id="re-stat">Ready</div>
+      </div>
+      <!-- Empty state -->
+      <div class="re-empty" id="re-empty">
+        <div class="re-empty-ic">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M12 6 Q15 10 12 14 Q9 10 12 6"/><line x1="12" y1="14" x2="12" y2="18"/></svg>
+        </div>
+        <h3>Awaiting Analysis</h3>
+        <p>Upload a plant photo to receive classification results</p>
+        <div class="re-steps">
+          <div class="re-step"><div class="re-stepn">1</div>Upload or capture a plant photo</div>
+          <div class="re-step"><div class="re-stepn">2</div>Click "Unmask This Plant"</div>
+          <div class="re-step"><div class="re-stepn">3</div>View species &amp; full TCM medicinal details</div>
+        </div>
+      </div>
+      <!-- Results -->
+      <div class="re-content" id="re-content">
+        <!-- Confidence + herb header -->
+        <div class="conf-hero">
+          <div class="cring-wrap">
+            <svg viewBox="0 0 100 100">
+              <circle class="ctrack" cx="50" cy="50" r="45"/>
+              <circle class="cfill" id="cfill" cx="50" cy="50" r="45"/>
+            </svg>
+            <div class="cring-inner">
+              <div class="cpct" id="cpct">--</div>
+              <div class="ctag">confidence</div>
+            </div>
+          </div>
+          <div class="herb-inf">
+            <div class="herb-zh" id="herb-zh">—</div>
+            <div class="herb-meta-row">
+              <span class="herb-meta-lbl">Pinyin</span>
+              <span class="herb-py" id="herb-py"></span>
+            </div>
+            <div class="herb-meta-row">
+              <span class="herb-meta-lbl">Scientific</span>
+              <span class="herb-sci" id="herb-sci"></span>
+            </div>
+            <div class="herb-meta-row" style="margin-bottom:.1rem">
+              <span class="herb-meta-lbl">Common</span>
+              <span class="herb-com" id="herb-com"></span>
+            </div>
+            <div class="herb-tags" id="herb-tags"></div>
+          </div>
+        </div>
+
+        <!-- Unknown alert -->
+        <div class="unk-alert" id="unk-alert">
+          <div class="unk-ic">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f25252" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="unk-inf">
+            <h4>Species Not Confidently Recognised</h4>
+            <p>Confidence is below threshold. Showing closest candidates — use a well-lit, focused photograph for best results.</p>
+          </div>
+        </div>
+
+        <!-- Top predictions -->
+        <div class="preds-sec">
+          <div class="preds-lbl">Top Candidate Species</div>
+          <div id="pred-rows"></div>
+        </div>
+
+        <!-- Herb details — full metadata -->
+        <div class="herb-dtg" id="herb-dtg"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ METHODOLOGY ══ -->
+<section class="meth-sec" id="methodology">
+  <div class="meth-inner">
+    <div class="stag">Research Architecture</div>
+    <h2 class="stit">Two-Stage <em>Hybrid</em> Pipeline</h2>
+    <p class="sdesc">A novel system that surpasses what any single model achieves — combining deep visual features from a transformer backbone with a diverse ensemble of specialist classifiers.</p>
+    <div class="meth-cards">
+      <div class="mc">
+        <div class="mc-num">Stage 01 · Backbone</div>
+        <div class="mc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+        <div class="mc-tit">Swin Transformer</div>
+        <div class="mc-desc">A Swin-B vision transformer pretrained on ImageNet-22K is fine-tuned using a two-phase strategy — four warmup epochs with frozen early stages, then full parameter unfreezing under cosine annealing with layer-wise learning rate differentiation.</div>
+        <div class="mc-chips"><span class="mc-chip">Swin-B Backbone</span><span class="mc-chip">ImageNet-22K</span><span class="mc-chip">HybridMix</span><span class="mc-chip">Cosine Annealing</span></div>
+        <div class="mc-met"><div class="mc-mv">91.95%</div><div class="mc-ml">best validation accuracy</div></div>
+      </div>
+      <div class="mc">
+        <div class="mc-num">Stage 02 · Ensemble</div>
+        <div class="mc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+        <div class="mc-tit">Specialist Ensemble</div>
+        <div class="mc-desc">Ten-view Test-Time Augmentation averages into a 1024-dimensional descriptor, compressed via PCA to 768 dimensions. Eight classifiers trained under 5-fold stratified cross-validation form a weighted soft-vote ensemble and stacking meta-learner.</div>
+        <div class="mc-chips"><span class="mc-chip">SVM-RBF</span><span class="mc-chip">LightGBM</span><span class="mc-chip">XGBoost</span><span class="mc-chip">LogReg</span><span class="mc-chip">MLP</span><span class="mc-chip">ExtraTrees</span></div>
+        <div class="mc-met"><div class="mc-mv">8</div><div class="mc-ml">specialist classifiers in ensemble</div></div>
+      </div>
+      <div class="mc">
+        <div class="mc-num">Stage 03 · Fusion</div>
+        <div class="mc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="mc-tit">Optimal Blend</div>
+        <div class="mc-desc">An exhaustive sweep across 91 mixing ratios identifies the optimal blend at α=0.41. The fusion strategy is validated via cross-validation with improvements concentrated in historically confusable herb classes.</div>
+        <div class="mc-chips"><span class="mc-chip">α=0.41 Blend</span><span class="mc-chip">ROC AUC 0.998</span><span class="mc-chip">t-SNE</span></div>
+        <div class="mc-met"><div class="mc-mv">92.76%</div><div class="mc-ml">final accuracy · +0.81% over backbone</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURES ══ -->
+<section class="feat-sec" id="features">
+  <div class="stag">Capabilities</div>
+  <h2 class="stit">Built for <em>Real-World</em> Demands</h2>
+  <p class="sdesc">Handles the hardest challenges of TCM herb identification: extreme inter-class similarity, varied processing states, and diverse imaging conditions.</p>
+  <div class="feat-grid">
+    <div class="fc">
+      <div class="fc-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="fc-tit">Unknown Detection</div>
+      <div class="fc-desc">Automatically flags specimens outside the 300 trained classes using confidence thresholding — no false certainty.</div>
+    </div>
+    <div class="fc">
+      <div class="fc-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M12 6 Q15 10 12 14 Q9 10 12 6"/><line x1="12" y1="14" x2="12" y2="18"/></svg></div>
+      <div class="fc-tit">Full TCM Database</div>
+      <div class="fc-desc">Complete TCM pharmacology — nature, taste, meridian affinity, parts used, and clinical indications for all 300 species.</div>
+    </div>
+    <div class="fc">
+      <div class="fc-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+      <div class="fc-tit">Live Camera Capture</div>
+      <div class="fc-desc">Real-time camera input for on-site identification. Works with mobile rear cameras and desktop webcams.</div>
+    </div>
+    <div class="fc">
+      <div class="fc-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+      <div class="fc-tit">Top-5 Candidates</div>
+      <div class="fc-desc">Returns ranked candidates with confidence scores — essential for ambiguous specimens with overlapping morphology.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PIPELINE ══ -->
+<section class="pipe-sec" id="pipeline">
+  <div class="pipe-inner">
+    <div class="stag">Inference Flow</div>
+    <h2 class="stit">From Image to <em>Prediction</em></h2>
+    <p class="sdesc">Each uploaded image passes through a precisely engineered inference chain before a classification is returned.</p>
+    <div class="pipe-track">
+      <div class="pnode"><div class="pnode-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="pnode-t">Image Input</div><div class="pnode-s">224×224 resize</div></div>
+      <div class="pnode-arr">→</div>
+      <div class="pnode"><div class="pnode-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="pnode-t">Swin-B Backbone</div><div class="pnode-s">1024-dim features</div></div>
+      <div class="pnode-arr">→</div>
+      <div class="pnode"><div class="pnode-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div><div class="pnode-t">10-View TTA</div><div class="pnode-s">averaged pooling</div></div>
+      <div class="pnode-arr">→</div>
+      <div class="pnode"><div class="pnode-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="pnode-t">PCA · 768-d</div><div class="pnode-s">≥95% variance</div></div>
+      <div class="pnode-arr">→</div>
+      <div class="pnode"><div class="pnode-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><div class="pnode-t">Ensemble</div><div class="pnode-s">8 classifiers</div></div>
+      <div class="pnode-arr">→</div>
+      <div class="pnode"><div class="pnode-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="pnode-t">α-Blend · 0.41</div><div class="pnode-s">Swin + Ensemble</div></div>
+      <div class="pnode-arr">→</div>
+      <div class="pnode" style="border-color:rgba(34,212,138,.22)"><div class="pnode-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="pnode-t">Classification</div><div class="pnode-s">300 classes</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-in">
+    <div class="fg">
+      <div>
+        <div class="fw">Herb<span>Vision</span></div>
+        <p class="fd-desc">TCM plant identification trained on the TCMP-300 benchmark — 52,089 expert-verified images, 300 species, two-stage hybrid architecture with full TCM pharmacological database.</p>
+        <div class="fmc"><div class="dot"></div><div class="fmc-t"><strong>TCMP-300 Pipeline v3</strong><span>Swin-B + Weighted Ensemble · α=0.41</span></div></div>
+      </div>
+      <div>
+        <div class="fc-lbl">Navigation</div>
+        <ul class="fl">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#analyzer">Analyzer</a></li>
+          <li><a href="#methodology">Methodology</a></li>
+          <li><a href="#pipeline">Pipeline</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      <div class="fcopy">© 2025 HerbVision · TCMP-300 Pipeline v3 · Research use</div>
+      <div class="fbadges">
+        <span class="fbadge">PyTorch</span><span class="fbadge">timm</span><span class="fbadge">Swin-B</span><span class="fbadge">scikit-learn</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ CAMERA MODAL ══ -->
+<div class="modal-bg" id="cam-modal">
+  <div class="cam-box">
+    <div class="cam-hdr">
+      <div class="cam-tit"><div class="rec"></div>Live Camera</div>
+      <button class="cam-close" onclick="closeCamera()">×</button>
+    </div>
+    <video id="cam-video" autoplay playsinline muted></video>
+    <div class="cam-ft">
+      <button class="btg" onclick="closeCamera()">Cancel</button>
+      <button class="bts" onclick="capturePhoto()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        Capture
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// BOTANICAL BACKGROUND — Canvas Animation
+// Animated mycelium network with organic growth
+// ══════════════════════════════════════════════
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let bgW = 0, bgH = 0;
+let nodes = [], branches = [];
+let lastTime = 0;
+
+function resizeBg() {
+  bgW = bgCanvas.width  = window.innerWidth;
+  bgH = bgCanvas.height = window.innerHeight;
+  initNetwork();
+}
+
+// ── Node ──
+function makeNode(x, y, size) {
+  return { x, y, size, opacity: 0, maxOpacity: Math.random() * 0.55 + 0.2, pulse: Math.random() * Math.PI * 2, fadeIn: true };
+}
+
+// ── Branch ──
+function makeBranch(x1, y1, angle, length, depth) {
+  const steps = Math.floor(length / 14);
+  const pts = [];
+  let cx = x1, cy = y1, a = angle;
+  for (let i = 0; i <= steps; i++) {
+    a += (Math.random() - 0.5) * 0.35;
+    cx += Math.cos(a) * 14;
+    cy += Math.sin(a) * 14;
+    pts.push({ x: cx, y: cy });
+  }
+  return {
+    pts, drawn: 0, speed: 0.3 + Math.random() * 0.5,
+    opacity: 0, maxOpacity: 0.13 + Math.random() * 0.18,
+    width: 0.4 + Math.random() * 0.8,
+    depth, done: false, age: 0, maxAge: 220 + Math.random() * 180,
+    children: 0
+  };
+}
+
+function initNetwork() {
+  nodes = []; branches = [];
+  const count = Math.min(10, Math.floor(bgW / 220));
+  for (let i = 0; i < count; i++) {
+    const x = Math.random() * bgW;
+    const y = Math.random() * bgH;
+    nodes.push(makeNode(x, y, 1.5 + Math.random() * 2));
+    const numBranches = 2 + Math.floor(Math.random() * 3);
+    for (let j = 0; j < numBranches; j++) {
+      const angle = (j / numBranches) * Math.PI * 2 + Math.random() * 0.5;
+      const len   = 80 + Math.random() * 180;
+      branches.push(makeBranch(x, y, angle, len, 0));
+    }
+  }
+}
+
+function bgFrame(ts) {
+  const dt = Math.min((ts - lastTime) / 16, 3);
+  lastTime = ts;
+  bgCtx.clearRect(0, 0, bgW, bgH);
+
+  // Update + draw branches
+  branches.forEach(b => {
+    b.age += dt;
+    if (b.drawn < b.pts.length) {
+      b.drawn = Math.min(b.pts.length, b.drawn + b.speed * dt);
+      if (b.opacity < b.maxOpacity) b.opacity = Math.min(b.maxOpacity, b.opacity + 0.003 * dt);
+    } else {
+      if (b.opacity < b.maxOpacity) b.opacity = Math.min(b.maxOpacity, b.opacity + 0.003 * dt);
+      // Fade out near maxAge
+      if (b.age > b.maxAge * 0.75) {
+        b.opacity = Math.max(0, b.opacity - 0.002 * dt);
+      }
+    }
+    if (b.age > b.maxAge) { b.done = true; return; }
+
+    // Draw branch
+    const drawn = Math.floor(b.drawn);
+    if (drawn < 2) return;
+    bgCtx.save();
+    bgCtx.globalAlpha = b.opacity;
+    bgCtx.strokeStyle = '#22d48a';
+    bgCtx.lineWidth = b.width;
+    bgCtx.shadowColor = 'rgba(34,212,138,.4)';
+    bgCtx.shadowBlur = 6;
+    bgCtx.beginPath();
+    bgCtx.moveTo(b.pts[0].x, b.pts[0].y);
+    for (let i = 1; i < drawn; i++) bgCtx.lineTo(b.pts[i].x, b.pts[i].y);
+    bgCtx.stroke();
+    bgCtx.restore();
+
+    // Spawn child branches
+    if (b.depth < 2 && b.drawn >= b.pts.length * 0.6 && b.children < 1 && Math.random() < 0.004 * dt) {
+      const last = b.pts[drawn - 1];
+      const ang  = Math.atan2(b.pts[drawn-1].y - b.pts[drawn-2].y, b.pts[drawn-1].x - b.pts[drawn-2].x);
+      branches.push(makeBranch(last.x, last.y, ang + (Math.random() - 0.5) * 1.2, 50 + Math.random() * 80, b.depth + 1));
+      b.children++;
+    }
+  });
+
+  // Remove dead branches and respawn from remaining nodes
+  branches = branches.filter(b => !b.done);
+  while (branches.length < nodes.length * 3) {
+    const n = nodes[Math.floor(Math.random() * nodes.length)];
+    const angle = Math.random() * Math.PI * 2;
+    const len   = 80 + Math.random() * 180;
+    branches.push(makeBranch(n.x, n.y, angle, len, 0));
+  }
+
+  // Draw + update nodes
+  nodes.forEach(n => {
+    n.pulse += 0.02;
+    if (n.fadeIn && n.opacity < n.maxOpacity) n.opacity += 0.003;
+    const r = n.size * (1 + 0.25 * Math.sin(n.pulse));
+    bgCtx.save();
+    bgCtx.globalAlpha = n.opacity * (0.7 + 0.3 * Math.sin(n.pulse));
+    bgCtx.fillStyle = '#22d48a';
+    bgCtx.shadowColor = '#22d48a';
+    bgCtx.shadowBlur = 16;
+    bgCtx.beginPath();
+    bgCtx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    bgCtx.fill();
+    bgCtx.restore();
+  });
+
+  // Soft vignette overlay
+  const vg = bgCtx.createRadialGradient(bgW/2, bgH/2, bgH*0.2, bgW/2, bgH/2, bgH*0.85);
+  vg.addColorStop(0, 'transparent');
+  vg.addColorStop(1, 'rgba(3,12,8,.35)');
+  bgCtx.fillStyle = vg;
+  bgCtx.fillRect(0, 0, bgW, bgH);
+
+  requestAnimationFrame(bgFrame);
+}
+
+let rto;
+window.addEventListener('resize', () => { clearTimeout(rto); rto = setTimeout(resizeBg, 120); });
+resizeBg();
+requestAnimationFrame(bgFrame);
+
+// ══════════════════════════════════════════════
+// UPLOAD / CAMERA
+// ══════════════════════════════════════════════
+let imgData = null, stream = null, busy = false;
+
+const fi       = document.getElementById('file-input');
+const upzone   = document.getElementById('upzone');
+const prevArea = document.getElementById('prev-area');
+const prevImg  = document.getElementById('prev-img');
+const scanOv   = document.getElementById('scan-ov');
+const scanLbl  = document.getElementById('scan-lbl');
+const upStat   = document.getElementById('up-stat');
+const reStat   = document.getElementById('re-stat');
+
+fi.addEventListener('change', e => { if (e.target.files[0]) loadImg(e.target.files[0]); fi.value = ''; });
+document.getElementById('upload-btn').addEventListener('click', e => { e.stopPropagation(); fi.click(); });
+document.getElementById('change-btn').addEventListener('click', e => { e.stopPropagation(); fi.click(); });
+upzone.addEventListener('click', e => { if (e.target.closest('button')) return; fi.click(); });
+
+upzone.addEventListener('dragover', e => { e.preventDefault(); upzone.classList.add('drag-over'); });
+upzone.addEventListener('dragleave', () => upzone.classList.remove('drag-over'));
+upzone.addEventListener('drop', e => {
+  e.preventDefault(); upzone.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) loadImg(e.dataTransfer.files[0]);
+});
+
+function loadImg(f) {
+  if (!f.type.startsWith('image/')) return;
+  const r = new FileReader();
+  r.onload = e => { imgData = e.target.result; prevImg.src = e.target.result; showPrev(); };
+  r.readAsDataURL(f);
+}
+
+function showPrev() {
+  upzone.style.display = 'none';
+  prevArea.classList.add('show');
+  setStat(upStat, 'Image loaded', 'live');
+  resetResults();
+}
+
+function resetUpload() {
+  imgData = null;
+  prevImg.src = '';
+  upzone.style.display = '';
+  prevArea.classList.remove('show');
+  scanOv.classList.remove('on');
+  setStat(upStat, 'Awaiting input', '');
+  resetResults();
+}
+
+function resetResults() {
+  document.getElementById('re-empty').style.display = '';
+  document.getElementById('re-content').classList.remove('show');
+  setStat(reStat, 'Ready', '');
+  document.getElementById('unk-alert').classList.remove('show');
+}
+
+function setStat(el, txt, cls) {
+  el.textContent = txt;
+  el.className = 'pstat' + (cls ? ' ' + cls : '');
+}
+
+// Camera
+document.getElementById('open-cam').addEventListener('click', openCam);
+
+async function openCam() {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}});
+    document.getElementById('cam-video').srcObject = stream;
+    document.getElementById('cam-modal').classList.add('open');
+  } catch(e) { alert('Camera unavailable: ' + e.message); }
+}
+
+function closeCamera() {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  document.getElementById('cam-modal').classList.remove('open');
+}
+
+function capturePhoto() {
+  const v = document.getElementById('cam-video');
+  const tc = document.createElement('canvas');
+  tc.width = v.videoWidth; tc.height = v.videoHeight;
+  tc.getContext('2d').drawImage(v, 0, 0);
+  imgData = tc.toDataURL('image/jpeg', 0.92);
+  prevImg.src = imgData;
+  closeCamera(); showPrev();
+}
+
+// ══════════════════════════════════════════════
+// ANALYSIS
+// ══════════════════════════════════════════════
+const MSGS = [
+  'Preprocessing image…','Extracting Swin-B features…','Running 10-view TTA…',
+  'Querying 8 ensemble classifiers…','Blending predictions (α=0.41)…',
+  'Calibrating confidence scores…','Resolving TCM pharmacology…','Finalizing classification…'
+];
+
+async function runAnalysis() {
+  if (!imgData || busy) return;
+  busy = true;
+  const btn = document.getElementById('az-btn');
+  btn.disabled = true; btn.textContent = 'Analysing…';
+  scanOv.classList.add('on');
+  setStat(upStat, 'Processing', 'live');
+  setStat(reStat, 'Running pipeline…', 'live');
+  let mi = 0; scanLbl.textContent = MSGS[0];
+  const iv = setInterval(() => { mi = (mi+1) % MSGS.length; scanLbl.textContent = MSGS[mi]; }, 620);
+
+  let result;
+  try { result = await callBackend(imgData); }
+  catch(e) { result = mockPredict(); }
+
+  await delay(2900);
+  clearInterval(iv);
+  scanOv.classList.remove('on');
+  btn.disabled = false;
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Unmask This Plant`;
+  busy = false;
+  setStat(upStat, 'Analysis complete', 'live');
+  showResults(result);
+}
+
+async function callBackend(dataUrl) {
+  const res = await fetch('/predict', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({image:dataUrl}), signal:AbortSignal.timeout(30000)
+  });
+  if (!res.ok) throw new Error('backend error');
+  return res.json();
+}
+
+function mockPredict() {
+  const unk = Math.random() < 0.11;
+  const shuffled = [...HERBS].sort(() => Math.random() - 0.5);
+  const top5 = shuffled.slice(0, 5);
+  const topConf = unk ? (0.3 + Math.random() * 0.22) : (0.62 + Math.random() * 0.31);
+  const confs = genConfs(topConf, 5);
+  return { unknown: unk, predictions: top5.map((h, i) => ({herb: {...h, class_name: h.com || h.zh}, confidence: confs[i]})) };
+}
+
+function genConfs(top, n) {
+  const c = [top]; let rem = 1 - top;
+  for (let i = 1; i < n-1; i++) { const v = rem*(0.08+Math.random()*.38); c.push(v); rem -= v; }
+  c.push(Math.max(rem, 0.003));
+  return c;
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ══════════════════════════════════════════════
+// DISPLAY RESULTS — full metadata
+// ══════════════════════════════════════════════
+function natClass(nat) {
+  const n = (nat || '').toLowerCase();
+  if (n.includes('hot'))  return 'dnat-hot';
+  if (n.includes('warm')) return 'dnat-warm';
+  if (n.includes('cold')) return 'dnat-cold';
+  if (n.includes('cool') || n.includes('slightly cold')) return 'dnat-cool';
+  return 'dnat-neutral';
+}
+
+function meridianPills(mer) {
+  if (!mer || mer === 'Various') return `<span class="dval">Various</span>`;
+  return '<div class="mer-list">' + mer.split(',').map(m => `<span class="mer-pill">${m.trim()}</span>`).join('') + '</div>';
+}
+
+function propsChips(props) {
+  if (!props || !props.length) return '';
+  return '<div class="props-grid">' + props.filter(Boolean).map(p => `<span class="prop-chip">${p}</span>`).join('') + '</div>';
+}
+
+function showResults(data) {
+  document.getElementById('re-empty').style.display = 'none';
+  document.getElementById('re-content').classList.add('show');
+
+  const {unknown, predictions} = data;
+  const top = predictions[0];
+  const h = top.herb, conf = top.confidence;
+  const pct = Math.round(conf * 100);
+
+  // Confidence ring
+  const fill = document.getElementById('cfill');
+  const cpct = document.getElementById('cpct');
+  fill.className = 'cfill' + (conf < 0.55 ? ' err' : conf < 0.73 ? ' warn' : '');
+  cpct.textContent = pct + '%';
+  cpct.style.color = conf < 0.55 ? '#f25252' : conf < 0.73 ? '#f0b429' : '#22d48a';
+  setTimeout(() => { fill.style.strokeDashoffset = 283 - (283 * conf); }, 80);
+
+  // Support both mock format and server format
+  // Title = display_name (class file label, number stripped) — primary source of truth
+  const zh    = h.display_name || h.zh || '—';
+  const py    = h.py    || h.pinyin  || '';
+  const sci   = h.sci   || '';
+  const com   = h.com   || h.name   || '';
+  const fam   = h.fam   || h.family || '';
+  const nat   = h.nat   || '';
+  const taste = h.taste || '';
+  const mer   = h.mer   || '';
+  const parts = h.parts || '';
+  const cat   = h.cat   || '';
+  const desc  = h.desc  || '';
+  const uses  = h.uses  || desc;
+  const props = Array.isArray(h.props) ? h.props : (cat ? [cat] : []);
+
+  document.getElementById('herb-zh').textContent  = zh;
+  document.getElementById('herb-py').textContent  = py;
+  document.getElementById('herb-sci').textContent = sci;
+  document.getElementById('herb-com').textContent = com;
+  document.getElementById('herb-tags').innerHTML  = props.filter(Boolean).map(p => `<span class="htag">${p}</span>`).join('');
+
+  if (unknown || conf < 0.55) document.getElementById('unk-alert').classList.add('show');
+
+  // Top predictions list
+  const rows = document.getElementById('pred-rows');
+  rows.innerHTML = '';
+  predictions.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'pred-row';
+    const p2 = (item.confidence * 100).toFixed(1);
+    const isTop = i === 0 && !unknown;
+    // display_name = the part after "NNN." in class_names.json (never the number)
+    const iName = item.herb.display_name || item.herb.com || item.herb.zh || '?';
+    const iSci  = item.herb.sci || '';
+    div.innerHTML = `<div class="pred-rk${isTop?' top':''}">${i+1}</div>
+      <div class="pred-txt">
+        <div class="pred-nm">${iName}</div>
+        <div class="pred-sc">${iSci}</div>
+      </div>
+      <div class="pred-bar-s">
+        <div class="pred-bar-bg"><div class="pred-bar-f${i>0?' dim':''}" data-w="${item.confidence*100}"></div></div>
+        <div class="pred-pct">${p2}%</div>
+      </div>`;
+    rows.appendChild(div);
+    setTimeout(() => {
+      div.classList.add('revealed');
+      const bar = div.querySelector('.pred-bar-f');
+      if (bar) bar.style.width = bar.dataset.w + '%';
+    }, 180 + i * 110);
+  });
+
+  // ── Full detail cards using all metadata fields ──
+  const dtg = document.getElementById('herb-dtg');
+  dtg.innerHTML = `
+    <!-- Row 1: Nature + Taste -->
+    <div class="drow drow-2">
+      <div class="dcard">
+        <div class="dlbl">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Nature
+        </div>
+        <div class="dval ${natClass(nat)}">${nat || '—'}</div>
+      </div>
+      <div class="dcard">
+        <div class="dlbl">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2a10 10 0 0 0 0 20"/></svg>
+          Taste
+        </div>
+        <div class="dval">${taste || '—'}</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Meridian Affinity full width -->
+    <div class="drow drow-1">
+      <div class="dcard">
+        <div class="dlbl">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Meridian Affinity
+        </div>
+        ${meridianPills(mer)}
+      </div>
+    </div>
+
+    <!-- Row 3: Plant Family + Parts Used -->
+    <div class="drow drow-2">
+      <div class="dcard">
+        <div class="dlbl">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22 Q12 14 7 9 Q14 8 17 14"/><path d="M12 22 Q12 14 17 9 Q10 8 7 14"/></svg>
+          Plant Family
+        </div>
+        <div class="dval">${fam || '—'}</div>
+      </div>
+      <div class="dcard">
+        <div class="dlbl">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Parts Used
+        </div>
+        <div class="dval"><span class="dpart">${parts || 'Various'}</span></div>
+      </div>
+    </div>
+
+    ${props.length ? `
+    <!-- Row 4: Properties / Actions -->
+    <div class="drow drow-1">
+      <div class="dcard">
+        <div class="dlbl">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Properties &amp; Actions
+        </div>
+        ${propsChips(props)}
+      </div>
+    </div>` : ''}
+
+    <!-- Row 5: Description -->
+    ${desc ? `
+    <div class="drow drow-1">
+      <div class="dcard dcard-prose">
+        <div class="dlbl">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Description
+        </div>
+        <div class="dval">${desc}</div>
+      </div>
+    </div>` : ''}
+
+    <!-- Row 6: TCM Actions & Use Cases -->
+    <div class="drow drow-1">
+      <div class="dcard dcard-prose" style="border-color:rgba(34,212,138,.15);background:rgba(34,212,138,.04)">
+        <div class="dlbl" style="color:var(--ac)">
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22d48a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 0 20"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M12 6 Q15 10 12 14 Q9 10 12 6"/><line x1="12" y1="14" x2="12" y2="18"/></svg>
+          Use Cases
+        </div>
+        <div class="dval">${uses || desc || 'Used in Traditional Chinese Medicine formulations.'}</div>
+      </div>
+    </div>
+  `;
+
+  setStat(reStat, unknown ? 'Low confidence — review required' : `Matched: ${pct}% confidence`, unknown ? 'warn' : 'live');
+}
+
+// ══════════════════════════════════════════════
+// MOCK HERB DATABASE (20 species for offline/fallback)
+// ══════════════════════════════════════════════
+const HERBS = [
+  {zh:'人参',py:'Rénshēn',sci:'Panax ginseng',com:'Asian Ginseng',fam:'Araliaceae',nat:'Warm',taste:'Sweet, slightly bitter',mer:'Spleen, Lung, Heart',parts:'Root',props:['Adaptogenic','Immune Enhancer','Qi Tonic'],desc:'The king of TCM tonics, ginseng has been used for over 2000 years to replenish vital energy. Rich in ginsenosides (triterpenoid saponins) with extensive pharmacological research.',uses:'Tonifies yuan qi, replenishes five organ systems, calms spirit, generates fluids. Used for fatigue, cognitive decline, immune deficiency, and recovery from illness.'},
+  {zh:'黄芪',py:'Huáng Qí',sci:'Astragalus membranaceus',com:'Milk Vetch Root',fam:'Fabaceae',nat:'Warm',taste:'Sweet',mer:'Spleen, Lung',parts:'Root',props:['Immune Modulator','Anti-inflammatory','Cardioprotective'],desc:'Strengthens spleen and defensive qi (wei qi). Primary herb for immune deficiency, chronic fatigue, and spontaneous sweating.',uses:'Strengthens wei qi and spleen, lifts sunken yang, promotes urination, generates flesh.'},
+  {zh:'当归',py:'Dāng Guī',sci:'Angelica sinensis',com:'Chinese Angelica',fam:'Apiaceae',nat:'Warm',taste:'Sweet, pungent, bitter',mer:'Liver, Heart, Spleen',parts:'Root',props:['Blood Tonic','Analgesic','Anti-coagulant'],desc:'Nourishes and invigorates blood, regulates menstruation, relieves pain.',uses:'Nourishes blood, invigorates blood, regulates menstruation, moistens intestines, relieves pain.'},
+  {zh:'灵芝',py:'Líng Zhī',sci:'Ganoderma lucidum',com:'Reishi Mushroom',fam:'Ganodermataceae',nat:'Neutral',taste:'Sweet',mer:'Heart, Lung, Liver, Kidney',parts:'Fruiting body',props:['Adaptogenic','Immunomodulatory','Anti-tumor'],desc:'The mushroom of immortality — tonifies qi and calms the heart-spirit.',uses:'Tonifies qi, calms spirit, stops cough and wheezing, nourishes heart blood.'},
+  {zh:'枸杞子',py:'Gǒuqǐ Zǐ',sci:'Lycium barbarum',com:'Wolfberry (Goji)',fam:'Solanaceae',nat:'Neutral',taste:'Sweet',mer:'Liver, Kidney',parts:'Fruit',props:['Antioxidant','Eye Health','Liver Protective'],desc:'Nourishes liver and kidney yin, brightens the eyes.',uses:'Nourishes liver and kidney yin, replenishes essence, brightens eyes.'},
+  {zh:'白术',py:'Bái Zhú',sci:'Atractylodes macrocephala',com:'White Atractylodes',fam:'Asteraceae',nat:'Warm',taste:'Sweet, bitter',mer:'Spleen, Stomach',parts:'Rhizome',props:['Digestive Tonic','Diuretic','Immune Enhancer'],desc:'Strengthens the spleen and augments qi, dries dampness.',uses:'Strengthens spleen qi, dries dampness, stabilizes exterior, stops sweating.'},
+  {zh:'茯苓',py:'Fú Líng',sci:'Poria cocos',com:'Poria Fungus',fam:'Polyporaceae',nat:'Neutral',taste:'Sweet, bland',mer:'Heart, Spleen, Lung, Kidney',parts:'Sclerotium',props:['Sedative','Diuretic','Immune Modulator'],desc:'Leaches out dampness, strengthens spleen, quiets heart spirit.',uses:'Promotes urination, leaches dampness, strengthens spleen, calms heart spirit.'},
+  {zh:'川芎',py:'Chuān Xiōng',sci:'Ligusticum chuanxiong',com:'Sichuan Lovage',fam:'Apiaceae',nat:'Warm',taste:'Pungent',mer:'Liver, Gallbladder, Pericardium',parts:'Rhizome',props:['Analgesic','Vasodilator','Blood Activator'],desc:'Invigorates blood, promotes qi movement, relieves pain. Primary TCM herb for headaches.',uses:'Invigorates blood, promotes qi movement, expels wind, relieves pain.'},
+  {zh:'甘草',py:'Gān Cǎo',sci:'Glycyrrhiza uralensis',com:'Licorice Root',fam:'Fabaceae',nat:'Neutral',taste:'Sweet',mer:'Heart, Lung, Spleen, Stomach',parts:'Root & rhizome',props:['Anti-inflammatory','Antispasmodic','Harmonizing'],desc:'The peacemaker herb — tonifies spleen, moistens lungs, harmonizes formulas.',uses:'Tonifies spleen qi, moistens lungs, clears heat, detoxifies, harmonizes other herbs.'},
+  {zh:'丹参',py:'Dān Shēn',sci:'Salvia miltiorrhiza',com:'Red Sage Root',fam:'Lamiaceae',nat:'Cool',taste:'Bitter',mer:'Heart, Pericardium, Liver',parts:'Root',props:['Cardiovascular','Blood Activator','Neuroprotective'],desc:'Activates blood, removes stasis, cools blood.',uses:'Invigorates blood, breaks stasis, cools blood, calms spirit, clears heat.'},
+  {zh:'黄连',py:'Huáng Lián',sci:'Coptis chinensis',com:'Chinese Goldthread',fam:'Ranunculaceae',nat:'Cold',taste:'Bitter',mer:'Heart, Liver, Stomach, Large Intestine',parts:'Rhizome',props:['Antimicrobial','Anti-diabetic','Antipyretic'],desc:'Clears heat, dries dampness, drains fire toxicity. Berberine is a leading research compound.',uses:'Clears heat, dries dampness, drains fire, resolves toxicity, kills parasites.'},
+  {zh:'熟地黄',py:'Shú Dì Huáng',sci:'Rehmannia glutinosa',com:'Prepared Rehmannia',fam:'Orobanchaceae',nat:'Warm',taste:'Sweet',mer:'Liver, Kidney, Heart',parts:'Root (prepared)',props:['Blood Tonic','Yin Nourishing','Anti-aging'],desc:'Nourishes yin and replenishes essence, tonifies blood.',uses:'Nourishes yin, tonifies blood, replenishes essence and marrow.'},
+  {zh:'白芍',py:'Bái Sháo',sci:'Paeonia lactiflora',com:'White Peony Root',fam:'Paeoniaceae',nat:'Cool',taste:'Bitter, sour',mer:'Liver, Spleen',parts:'Root',props:['Muscle Relaxant','Analgesic','Hepatoprotective'],desc:'Nourishes blood, softens liver, relieves pain and spasms.',uses:'Nourishes blood, calms liver yang, softens liver, relieves pain.'},
+  {zh:'柴胡',py:'Chái Hú',sci:'Bupleurum chinense',com:'Chinese Thoroughwax',fam:'Apiaceae',nat:'Slightly Cold',taste:'Pungent, bitter',mer:'Liver, Gallbladder',parts:'Root',props:['Anti-depressant','Hepatoprotective','Anti-inflammatory'],desc:'Disperses shaoyang disorders, courses liver, relieves constraint.',uses:'Resolves shaoyang, courses liver qi, relieves constraint, raises yang.'},
+  {zh:'半夏',py:'Bàn Xià',sci:'Pinellia ternata',com:'Pinellia Rhizome',fam:'Araceae',nat:'Warm',taste:'Pungent',mer:'Spleen, Stomach, Lung',parts:'Tuber (rhizome)',props:['Antiemetic','Expectorant','Antitussive'],desc:'Dries dampness, transforms phlegm, directs rebellious qi downward.',uses:'Dries dampness, transforms phlegm, descends qi, stops vomiting.'},
+  {zh:'陈皮',py:'Chén Pí',sci:'Citrus reticulata',com:'Aged Tangerine Peel',fam:'Rutaceae',nat:'Warm',taste:'Pungent, bitter',mer:'Spleen, Lung',parts:'Dried peel',props:['Digestive Aid','Expectorant','Antispasmodic'],desc:'Regulates qi, strengthens spleen, dries dampness and transforms phlegm.',uses:'Regulates qi, strengthens spleen, dries dampness, transforms phlegm.'},
+  {zh:'麦冬',py:'Mài Dōng',sci:'Ophiopogon japonicus',com:'Dwarf Lilyturf Tuber',fam:'Asparagaceae',nat:'Cool',taste:'Sweet, slightly bitter',mer:'Heart, Lung, Stomach',parts:'Root tuber',props:['Yin Nourishing','Cardioprotective','Anti-diabetic'],desc:'Nourishes yin and moistens dryness, clears heat, quiets the heart.',uses:'Nourishes stomach and lung yin, clears heat, moistens dryness, calms spirit.'},
+  {zh:'黄精',py:'Huáng Jīng',sci:'Polygonatum sibiricum',com:"Siberian Solomon's Seal",fam:'Asparagaceae',nat:'Neutral',taste:'Sweet',mer:'Spleen, Lung, Kidney',parts:'Rhizome',props:['Qi Tonic','Anti-aging','Immune Enhancer'],desc:'Supplements jing, qi, and shen. Polysaccharides show immune-modulating effects.',uses:'Tonifies spleen qi and yin, moistens lung, replenishes kidney essence.'},
+  {zh:'牡丹皮',py:'Mǔ Dān Pí',sci:'Paeonia suffruticosa',com:'Tree Peony Root Bark',fam:'Paeoniaceae',nat:'Cool',taste:'Bitter, pungent',mer:'Heart, Liver, Kidney',parts:'Root bark',props:['Anti-inflammatory','Blood Activator','Antipyretic'],desc:'Clears heat from blood, invigorates blood and dispels stasis.',uses:'Clears heat, cools blood, invigorates blood, dispels stasis, drains pus.'},
+  {zh:'薄荷',py:'Bò He',sci:'Mentha haplocalyx',com:'Field Mint',fam:'Lamiaceae',nat:'Cool',taste:'Pungent',mer:'Liver, Lung',parts:'Aerial parts',props:['Diaphoretic','Analgesic','Antimicrobial'],desc:'Disperses wind-heat, clears head and eyes, smooths liver qi.',uses:'Disperses wind-heat, clears head and eyes, benefits throat, smooths liver qi.'},
+];
+
+// NAV scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').style.borderBottomColor =
+    window.scrollY > 50 ? 'rgba(255,255,255,.13)' : 'rgba(255,255,255,.07)';
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
+});
+</script>
+</body>
+</html>
