@@ -7,3 +7,4 @@ Pillow>=10.0.0
 numpy>=1.24.0
 huggingface_hub>=1.13.0
 requests>=2.33.1
+gunicorn>=25.3.0
