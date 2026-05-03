@@ -302,7 +302,9 @@ CORS(app)
 @app.before_request
 def force_https():
     """Redirect HTTP to HTTPS in production (Railway)."""
-    if not request.is_secure and not app.debug:
+    proto = request.headers.get('x-forwarded-proto', 'http')
+    
+    if proto == 'http' and not app.debug:
         url = request.url.replace('http://', 'https://', 1)
         return redirect(url, code=301)
 
