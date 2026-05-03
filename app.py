@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import requests as req_lib
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, redirect
 from flask_cors import CORS
 from PIL import Image
 
@@ -294,6 +294,17 @@ VAL_TRANSFORM = transforms.Compose([
 # ─────────────────────────────────────────────────────────────
 app = Flask(__name__)
 CORS(app)
+
+
+# ─────────────────────────────────────────────────────────────
+#  HTTPS Redirect Middleware
+# ─────────────────────────────────────────────────────────────
+@app.before_request
+def force_https():
+    """Redirect HTTP to HTTPS in production (Railway)."""
+    if not request.is_secure and not app.debug:
+        url = request.url.replace('http://', 'https://', 1)
+        return redirect(url, code=301)
 
 
 def decode_image(img_b64: str) -> Image.Image:
