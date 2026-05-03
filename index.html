@@ -119,10 +119,7 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:16px;l
 .btg{background:transparent;color:var(--tx);border:1px solid var(--bd)!important}.btg:hover{border-color:rgba(34,212,138,.35)!important;color:var(--ac)}
 
 /* preview */
-.prev-area{display:none;flex-direction:column;padding:1.5rem;gap:1rem}
-.prev-area.show{display:flex}
-.img-wrap{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#071410}
-.img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+/* (prev-area and img-wrap now defined in image comparison section) */
 
 /* scan overlay */
 .scan-ov{position:absolute;inset:0;display:none;overflow:hidden;border-radius:16px}
@@ -148,6 +145,28 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:16px;l
 .bctrl-az{background:var(--ac);border-color:transparent!important;color:#030c08}
 .bctrl-az:hover{background:#3fe09c;color:#030c08}
 .bctrl-az:disabled{opacity:.6;cursor:not-allowed}
+
+/* ── SIDE-BY-SIDE IMAGE COMPARISON ── */
+.prev-area{display:none;flex-direction:column;padding:1.25rem 1.25rem .75rem;gap:.75rem}
+.prev-area.show{display:flex}
+.img-comparison{display:grid;grid-template-columns:1fr;gap:.75rem;transition:grid-template-columns .3s ease}
+.img-comparison.has-ref{grid-template-columns:1fr 1fr}
+.img-slot{display:flex;flex-direction:column;gap:.45rem;min-width:0}
+.img-slot-lbl{display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--di)}
+.ref-slot-lbl{color:var(--go)}
+.ref-slot-lbl svg{color:var(--go)}
+.img-slot-lbl #ref-img-label{font-weight:400;color:var(--mu);text-transform:none;letter-spacing:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px}
+.img-wrap{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1/1;background:#071410}
+.img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .4s}
+/* reference corner decorations */
+.rc{position:absolute;width:12px;height:12px;border-color:var(--go);border-style:solid;opacity:.55}
+.rc.rc-tl{top:6px;left:6px;border-width:1.5px 0 0 1.5px}
+.rc.rc-tr{top:6px;right:6px;border-width:1.5px 1.5px 0 0}
+.rc.rc-bl{bottom:6px;left:6px;border-width:0 0 1.5px 1.5px}
+.rc.rc-br{bottom:6px;right:6px;border-width:0 1.5px 1.5px 0}
+/* cross-check hint bar */
+.ref-hint-bar{display:none;align-items:flex-start;gap:6px;padding:.5rem .65rem;border-radius:9px;background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.16);font-size:.67rem;color:rgba(240,180,41,.8);line-height:1.55}
+.ref-hint-bar svg{flex-shrink:0;margin-top:1px;color:var(--go)}
 
 /* ── RESULTS PANEL ── */
 .re-empty{min-height:460px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center;gap:1rem}
@@ -190,14 +209,17 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:16px;l
 
 /* predictions list */
 .preds-sec{padding:1.25rem 1.75rem 1.5rem;border-bottom:1px solid var(--bd)}
-.preds-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.11em;color:var(--di);margin-bottom:1rem}
-.pred-row{display:flex;align-items:center;gap:.875rem;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.04);opacity:0;transform:translateX(14px);transition:opacity .4s ease,transform .4s ease}
-.pred-row:last-child{border-bottom:none}
+.preds-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.11em;color:var(--di);margin-bottom:.55rem}
+.preds-hint{font-size:.65rem;color:var(--di);margin-bottom:.75rem;opacity:.7}
+.pred-row{display:flex;align-items:center;gap:.875rem;padding:.55rem .65rem;border:1px solid transparent;border-radius:10px;margin-bottom:2px;opacity:0;transform:translateX(14px);transition:opacity .4s ease,transform .4s ease,background .18s,border-color .18s;cursor:pointer}
+.pred-row:hover{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.07)}
 .pred-row.revealed{opacity:1;transform:translateX(0)}
+.pred-row.active{background:rgba(34,212,138,.07);border-color:rgba(34,212,138,.22)!important}
+.pred-row.active .pred-nm{color:var(--ac)}
 .pred-rk{font-family:var(--fm);font-size:.62rem;color:var(--di);width:18px;text-align:center;flex-shrink:0}
 .pred-rk.top{color:var(--ac)}
 .pred-txt{flex:1;min-width:0}
-.pred-nm{font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pred-nm{font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .18s}
 .pred-sc{font-size:.7rem;color:var(--di);font-style:italic}
 .pred-bar-s{width:88px;flex-shrink:0}
 .pred-bar-bg{height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-bottom:3px}
@@ -392,13 +414,13 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
   <p class="sdesc">Upload a clear photograph or capture one live. Our two-stage pipeline classifies the specimen and retrieves full TCM medicinal details.</p>
   <div class="az-grid">
 
-    <!-- LEFT: Upload -->
+    <!-- LEFT: Upload + Reference -->
     <div class="panel" id="upanel">
       <div class="phdr">
         <div class="phdr-t">Image Input</div>
         <div class="pstat" id="up-stat">Awaiting input</div>
       </div>
-      <!-- Upload zone -->
+      <!-- Upload zone (shown before image) -->
       <div class="upzone" id="upzone">
         <div class="upzone-frame"></div>
         <div class="up-icon">
@@ -418,18 +440,45 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
         </div>
         <input type="file" id="file-input" accept="image/*">
       </div>
-      <!-- Preview area -->
+      <!-- Preview area (shown after image loaded) -->
       <div class="prev-area" id="prev-area">
-        <div class="img-wrap" id="img-wrap">
-          <img id="prev-img" src="" alt="Plant preview">
-          <div class="scan-ov" id="scan-ov">
-            <div class="scan-grid-bg"></div>
-            <div class="scan-beam"></div>
-            <div class="sc sc-tl"></div><div class="sc sc-tr"></div>
-            <div class="sc sc-bl"></div><div class="sc sc-br"></div>
-            <div class="scan-lbl" id="scan-lbl">Initializing…</div>
-            <div class="scan-dots"><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div></div>
+        <!-- Side-by-side image comparison -->
+        <div class="img-comparison" id="img-comparison">
+          <!-- Uploaded photo -->
+          <div class="img-slot">
+            <div class="img-slot-lbl">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+              Your Photo
+            </div>
+            <div class="img-wrap" id="img-wrap">
+              <img id="prev-img" src="" alt="Plant preview">
+              <div class="scan-ov" id="scan-ov">
+                <div class="scan-grid-bg"></div>
+                <div class="scan-beam"></div>
+                <div class="sc sc-tl"></div><div class="sc sc-tr"></div>
+                <div class="sc sc-bl"></div><div class="sc sc-br"></div>
+                <div class="scan-lbl" id="scan-lbl">Initializing…</div>
+                <div class="scan-dots"><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div></div>
+              </div>
+            </div>
           </div>
+          <!-- Reference specimen (hidden until analysis) -->
+          <div class="img-slot" id="ref-slot" style="display:none">
+            <div class="img-slot-lbl ref-slot-lbl">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Reference · <span id="ref-img-label">—</span>
+            </div>
+            <div class="img-wrap" id="ref-img-wrap">
+              <img id="ref-img" src="" alt="Reference specimen">
+              <div class="rc rc-tl"></div><div class="rc rc-tr"></div>
+              <div class="rc rc-bl"></div><div class="rc rc-br"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Cross-check hint (shown after analysis) -->
+        <div class="ref-hint-bar" id="ref-hint-bar" style="display:none">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Cross-reference the specimen above with the reference image to visually confirm the match.
         </div>
         <div class="prev-ctrl">
           <button class="bctrl" onclick="resetUpload()">
@@ -513,6 +562,7 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
         <!-- Top predictions -->
         <div class="preds-sec">
           <div class="preds-lbl">Top Candidate Species</div>
+          <div class="preds-hint">Click any candidate to view its full TCM details below</div>
           <div id="pred-rows"></div>
         </div>
 
@@ -804,6 +854,7 @@ requestAnimationFrame(bgFrame);
 // UPLOAD / CAMERA
 // ══════════════════════════════════════════════
 let imgData = null, stream = null, busy = false;
+let allPredictions = [], selectedPredIdx = 0;
 
 const fi       = document.getElementById('file-input');
 const upzone   = document.getElementById('upzone');
@@ -860,6 +911,13 @@ function resetResults() {
   alert.style.borderColor = '';
   document.getElementById('unk-title').textContent = 'Species Not Confidently Recognised';
   document.getElementById('unk-msg').textContent   = 'Confidence is below threshold. Showing closest candidates — use a well-lit, focused photograph for best results.';
+  // Hide reference image elements
+  document.getElementById('ref-slot').style.display = 'none';
+  document.getElementById('ref-hint-bar').style.display = 'none';
+  document.getElementById('img-comparison').classList.remove('has-ref');
+  document.getElementById('ref-img').src = '';
+  allPredictions = [];
+  selectedPredIdx = -1;
 }
 
 function setStat(el, txt, cls) {
@@ -976,28 +1034,57 @@ function propsChips(props) {
   return '<div class="props-grid">' + props.filter(Boolean).map(p => `<span class="prop-chip">${p}</span>`).join('') + '</div>';
 }
 
-function showResults(data) {
-  document.getElementById('re-empty').style.display = 'none';
-  document.getElementById('re-content').classList.add('show');
+function showReferenceImage(herb) {
+  const refSlot  = document.getElementById('ref-slot');
+  const refImg   = document.getElementById('ref-img');
+  const refLabel = document.getElementById('ref-img-label');
+  const refHint  = document.getElementById('ref-hint-bar');
+  const cmp      = document.getElementById('img-comparison');
 
-  const {unknown, predictions} = data;
-  const top = predictions[0];
-  const h = top.herb, conf = top.confidence;
-  const pct = Math.round(conf * 100);
+  const className = herb ? herb.class_name : null;
+  if (!className) {
+    refSlot.style.display = 'none';
+    refHint.style.display = 'none';
+    cmp.classList.remove('has-ref');
+    return;
+  }
+
+  const displayName = herb.display_name || herb.com || herb.zh || className;
+  refLabel.textContent = displayName;
+
+  // Restore in case onerror hid the wrap
+  refImg.parentElement.style.display = '';
+  refImg.style.opacity = '0';
+  refImg.src = `/reference/${encodeURIComponent(className)}`;
+  refImg.onload = () => {
+    refImg.style.opacity = '1';
+    refSlot.style.display = '';
+    cmp.classList.add('has-ref');
+    refHint.style.display = 'flex';
+  };
+  refImg.onerror = () => {
+    refSlot.style.display = 'none';
+    cmp.classList.remove('has-ref');
+    refHint.style.display = 'none';
+  };
+}
+
+function renderHerbDetails(h, conf, unknown, userSelected) {
+  // userSelected = user explicitly clicked a row → always show full details
+  // When not userSelected and conf < 0.20 → show full unknown state
+  const veryLow = !userSelected && conf < 0.20;
+  const pct     = Math.round(conf * 100);
 
   // Confidence ring
   const fill = document.getElementById('cfill');
   const cpct = document.getElementById('cpct');
-  const veryLow = conf < 0.20;
   fill.className = 'cfill' + (conf < 0.55 ? ' err' : conf < 0.73 ? ' warn' : '');
   cpct.textContent = pct + '%';
   cpct.style.color = conf < 0.55 ? '#f25252' : conf < 0.73 ? '#f0b429' : '#22d48a';
+  fill.style.strokeDashoffset = 283;
   setTimeout(() => { fill.style.strokeDashoffset = 283 - (283 * conf); }, 80);
 
-  // Support both mock format and server format
-  // Title = display_name (class file label, number stripped) — primary source of truth
-  // For very low confidence, override display to "Unknown Class"
-  const zh    = veryLow ? 'Unknown Class' : (h.display_name || h.zh || '—');
+  const zh    = veryLow ? 'Unknown' : (h.display_name || h.zh || '—');
   const py    = h.py    || h.pinyin  || '';
   const sci   = h.sci   || '';
   const com   = h.com   || h.name   || '';
@@ -1006,10 +1093,9 @@ function showResults(data) {
   const taste = h.taste || '';
   const mer   = h.mer   || '';
   const parts = h.parts || '';
-  const cat   = h.cat   || '';
   const desc  = h.desc  || '';
   const uses  = h.uses  || desc;
-  const props = Array.isArray(h.props) ? h.props : (cat ? [cat] : []);
+  const props = Array.isArray(h.props) ? h.props : (h.cat ? [h.cat] : []);
 
   document.getElementById('herb-zh').textContent  = zh;
   document.getElementById('herb-py').textContent  = veryLow ? '' : py;
@@ -1017,52 +1103,25 @@ function showResults(data) {
   document.getElementById('herb-com').textContent = veryLow ? '' : com;
   document.getElementById('herb-tags').innerHTML  = veryLow ? '' : props.filter(Boolean).map(p => `<span class="htag">${p}</span>`).join('');
 
+  // Unknown alert
+  const alert = document.getElementById('unk-alert');
+  alert.classList.remove('show');
+  alert.style.background = ''; alert.style.borderColor = '';
   if (veryLow) {
-    const alert = document.getElementById('unk-alert');
     alert.classList.add('show');
-    alert.style.background = 'rgba(242,82,82,.11)';
+    alert.style.background  = 'rgba(242,82,82,.11)';
     alert.style.borderColor = 'rgba(242,82,82,.35)';
-    document.getElementById('unk-title').textContent = 'Unknown Class — Not Within 300 Species';
-    document.getElementById('unk-msg').textContent   = 'Confidence is very low. This specimen is likely not within the 300 trained herb classes. Please upload a clearer or correct image for best results.';
-  } else if (unknown || conf < 0.55) {
-    document.getElementById('unk-alert').classList.add('show');
+    document.getElementById('unk-title').textContent = 'Unknown — Select a candidate below to inspect';
+    document.getElementById('unk-msg').textContent   = 'Click any candidate in the list to view its full TCM details for manual comparison.';
+  } else if (!userSelected && (unknown || conf < 0.55)) {
+    alert.classList.add('show');
     document.getElementById('unk-title').textContent = 'Species Not Confidently Recognised';
     document.getElementById('unk-msg').textContent   = 'Confidence is below threshold. Showing closest candidates — use a well-lit, focused photograph for best results.';
   }
 
-  // Top predictions list
-  const rows = document.getElementById('pred-rows');
-  rows.innerHTML = '';
-  predictions.forEach((item, i) => {
-    const div = document.createElement('div');
-    div.className = 'pred-row';
-    const p2 = (item.confidence * 100).toFixed(1);
-    const isTop = i === 0 && !unknown;
-    // display_name = the part after "NNN." in class_names.json (never the number)
-    const iName = item.herb.display_name || item.herb.com || item.herb.zh || '?';
-    const iSci  = item.herb.sci || '';
-    div.innerHTML = `<div class="pred-rk${isTop?' top':''}">${i+1}</div>
-      <div class="pred-txt">
-        <div class="pred-nm">${iName}</div>
-        <div class="pred-sc">${iSci}</div>
-      </div>
-      <div class="pred-bar-s">
-        <div class="pred-bar-bg"><div class="pred-bar-f${i>0?' dim':''}" data-w="${item.confidence*100}"></div></div>
-        <div class="pred-pct">${p2}%</div>
-      </div>`;
-    rows.appendChild(div);
-    setTimeout(() => {
-      div.classList.add('revealed');
-      const bar = div.querySelector('.pred-bar-f');
-      if (bar) bar.style.width = bar.dataset.w + '%';
-    }, 180 + i * 110);
-  });
-
-  // ── Full detail cards using all metadata fields ──
-  const dtg = document.getElementById('herb-dtg');
+  // Detail cards
   const unk_val = `<span style="color:var(--di);font-style:italic">Unknown</span>`;
-  dtg.innerHTML = `
-    <!-- Row 1: Nature + Taste -->
+  document.getElementById('herb-dtg').innerHTML = `
     <div class="drow drow-2">
       <div class="dcard">
         <div class="dlbl">
@@ -1079,8 +1138,6 @@ function showResults(data) {
         <div class="dval">${veryLow ? unk_val : (taste || '—')}</div>
       </div>
     </div>
-
-    <!-- Row 2: Meridian Affinity full width -->
     <div class="drow drow-1">
       <div class="dcard">
         <div class="dlbl">
@@ -1090,8 +1147,6 @@ function showResults(data) {
         ${veryLow ? unk_val : meridianPills(mer)}
       </div>
     </div>
-
-    <!-- Row 3: Plant Family + Parts Used -->
     <div class="drow drow-2">
       <div class="dcard">
         <div class="dlbl">
@@ -1108,9 +1163,7 @@ function showResults(data) {
         <div class="dval">${veryLow ? unk_val : `<span class="dpart">${parts || 'Various'}</span>`}</div>
       </div>
     </div>
-
     ${(!veryLow && props.length) ? `
-    <!-- Row 4: Properties / Actions -->
     <div class="drow drow-1">
       <div class="dcard">
         <div class="dlbl">
@@ -1120,19 +1173,15 @@ function showResults(data) {
         ${propsChips(props)}
       </div>
     </div>` : ''}
-
-    <!-- Row 5: Description -->
     <div class="drow drow-1">
       <div class="dcard dcard-prose">
         <div class="dlbl">
-          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <svg class="dlbl-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           Description
         </div>
         <div class="dval">${veryLow ? unk_val : (desc || '—')}</div>
       </div>
     </div>
-
-    <!-- Row 6: TCM Actions & Use Cases -->
     <div class="drow drow-1">
       <div class="dcard dcard-prose" style="border-color:rgba(34,212,138,.15);background:rgba(34,212,138,.04)">
         <div class="dlbl" style="color:var(--ac)">
@@ -1144,7 +1193,81 @@ function showResults(data) {
     </div>
   `;
 
-  setStat(reStat, veryLow ? 'Unknown class — image unclear or out of scope' : unknown ? 'Low confidence — review required' : `Matched: ${pct}% confidence`, (veryLow || unknown) ? 'warn' : 'live');
+  const statTxt = veryLow
+    ? 'Unknown — click a candidate to inspect'
+    : userSelected
+    ? `Inspecting: ${h.display_name || h.zh || '?'}`
+    : unknown ? 'Low confidence — review required'
+    : `Matched: ${pct}% confidence`;
+  const statCls = veryLow ? 'warn' : userSelected ? 'live' : (unknown || conf < 0.55) ? 'warn' : 'live';
+  setStat(reStat, statTxt, statCls);
+}
+
+function selectPrediction(idx) {
+  if (!allPredictions.length) return;
+  selectedPredIdx = idx;
+
+  // Update row highlights
+  document.querySelectorAll('.pred-row').forEach((row, i) => {
+    row.classList.toggle('active', i === idx);
+  });
+
+  const item = allPredictions[idx];
+  // userSelected=true → always show full herb details regardless of confidence
+  renderHerbDetails(item.herb, item.confidence, false, true);
+  showReferenceImage(item.herb);
+}
+
+function showResults(data) {
+  document.getElementById('re-empty').style.display = 'none';
+  document.getElementById('re-content').classList.add('show');
+
+  allPredictions = data.predictions;
+  const {unknown} = data;
+  const topConf   = allPredictions[0].confidence;
+  const veryLow   = topConf < 0.20;
+
+  // If very low confidence: start with nothing selected
+  selectedPredIdx = veryLow ? -1 : 0;
+
+  // Render prediction rows (none highlighted when veryLow)
+  const rows = document.getElementById('pred-rows');
+  rows.innerHTML = '';
+  allPredictions.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'pred-row' + (!veryLow && i === 0 ? ' active' : '');
+    const p2    = (item.confidence * 100).toFixed(1);
+    const isTop = i === 0 && !unknown && !veryLow;
+    const iName = item.herb.display_name || item.herb.com || item.herb.zh || '?';
+    const iSci  = item.herb.sci || '';
+    div.innerHTML = `<div class="pred-rk${isTop?' top':''}">${i+1}</div>
+      <div class="pred-txt">
+        <div class="pred-nm">${iName}</div>
+        <div class="pred-sc">${iSci}</div>
+      </div>
+      <div class="pred-bar-s">
+        <div class="pred-bar-bg"><div class="pred-bar-f${i>0?' dim':''}" data-w="${item.confidence*100}"></div></div>
+        <div class="pred-pct">${p2}%</div>
+      </div>`;
+    div.addEventListener('click', () => selectPrediction(i));
+    rows.appendChild(div);
+    setTimeout(() => {
+      div.classList.add('revealed');
+      const bar = div.querySelector('.pred-bar-f');
+      if (bar) bar.style.width = bar.dataset.w + '%';
+    }, 180 + i * 110);
+  });
+
+  if (veryLow) {
+    // No selection — render unknown state (userSelected=false, veryLow triggers internally)
+    renderHerbDetails(allPredictions[0].herb, topConf, unknown, false);
+    // No reference image shown when unknown
+    showReferenceImage(null);
+  } else {
+    // Auto-select top prediction
+    renderHerbDetails(allPredictions[0].herb, topConf, unknown, false);
+    showReferenceImage(allPredictions[0].herb);
+  }
 }
 
 // ══════════════════════════════════════════════

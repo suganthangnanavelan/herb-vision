@@ -217,7 +217,7 @@ def parse_class_name(class_name: str):
 def get_herb(class_name: str) -> dict:
     """
     Parse 'NNN.HerbName' → look up herb by numeric ID in metadata.json.
-    Always returns a full herb dict plus 'display_name' for the frontend.
+    Always returns a full herb dict plus 'display_name' and 'class_name' for the frontend.
     """
     id_str, display_name = parse_class_name(class_name)
 
@@ -234,7 +234,7 @@ def get_herb(class_name: str) -> dict:
         herb = HERB_LOOKUP.get(id_str)
 
     if herb:
-        return {**herb, "display_name": display_name}
+        return {**herb, "display_name": display_name, "class_name": class_name}
 
     print(f"[WARN] No metadata match for class_name={class_name!r} (id={id_str!r})")
     return {
@@ -251,6 +251,7 @@ def get_herb(class_name: str) -> dict:
         "desc":         "No metadata available for this species.",
         "uses":         "No metadata available for this species.",
         "display_name": display_name,
+        "class_name":   class_name,
     }
 
 
@@ -351,6 +352,17 @@ def predict():
     except Exception as exc:
         import traceback; traceback.print_exc()
         return jsonify({"error": str(exc)}), 500
+
+
+@app.route("/reference/<path:classname>")
+def reference_image(classname):
+    """Serve a reference image for the given class name (auto-detects extension)."""
+    ref_dir = Path("reference")
+    for ext in ("jpg", "jpeg", "png", "JPG", "JPEG", "PNG", "webp"):
+        candidate = ref_dir / f"{classname}.{ext}"
+        if candidate.exists():
+            return send_file(str(candidate))
+    return jsonify({"error": "Reference image not found"}), 404
 
 
 @app.route("/debug/classes", methods=["GET"])
