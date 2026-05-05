@@ -1,0 +1,228 @@
+========================================================================
+  TCMP-300  PROFESSIONAL PIPELINE  (RTX 5050 x 8 GB VRAM)
+  Targets :  Val > 92 %  |  Train-Val Gap < 2 %
+========================================================================
+  Device      : cuda
+  GPU         : NVIDIA GeForce RTX 5050 Laptop GPU
+  VRAM        : 8.0 GB
+  Batch       : 16 x 4 = 64 (effective)
+  Epochs      : 30  |  Warmup : 4
+  NUM_WORKERS : 0  (0 = required on Windows)
+========================================================================
+
+------------------------------------------------------------
+  LOADING DATASET
+------------------------------------------------------------
+  Classes    : 300
+  Train      : 44,134
+  Val        : 7,955
+  ML subset  : 6,000
+
+  Model params : 87,423,972
+
+========================================================================
+  TRAINING  (Target: Val > 92 %  |  Gap < 2 %)
+========================================================================
+  Ep   Train%     Val%    Gap%         LR  Status
+------------------------------------------------------------------------
+   1    16.26    44.59 BEST  -28.32   4.00e-05  LARGE   (1154s)
+   2    51.07    71.93 BEST  -20.86   6.00e-05  LARGE   (1134s)
+   3    69.38    82.28 BEST  -12.90   8.00e-05  LARGE   (1165s)
+   4    76.37    85.78 BEST   -9.41   8.00e-05  LARGE   (1142s)
+
+  > Phase-2: Full fine-tune  (epoch 5)
+
+   5    80.18    87.77 BEST   -7.59   7.97e-05  LARGE   (1241s)
+   6    83.38    88.85 BEST   -5.47   7.89e-05  LARGE   (1229s)
+   7    84.21    89.86 BEST   -5.65   7.74e-05  LARGE   (1223s)
+   8    85.96    90.38 BEST   -4.42   7.55e-05  WARN    (1241s)
+   9    86.94    90.60 BEST   -3.66   7.30e-05  WARN    (1233s)
+  10    87.49    90.71 BEST   -3.22   7.01e-05  WARN    (1257s)
+  11    88.07    91.18 BEST   -3.10   6.67e-05  WARN    (1257s)
+  12    88.93    91.25 BEST   -2.32   6.29e-05  WARN    (1224s)
+  13    89.91    91.13        -1.22   5.89e-05  OK <2%  (1229s)
+  14    90.61    91.29 BEST   -0.67   5.45e-05  OK <2%  (1227s)
+  15    90.31    91.57 BEST   -1.26   5.00e-05  OK <2%  (1242s)
+  16    90.77    91.59 BEST   -0.82   4.53e-05  OK <2%  (1242s)
+  17    91.26    91.59        -0.33   4.05e-05  OK <2%  (1246s)
+  18    91.50    91.59        -0.09   3.57e-05  OK <2%  (1240s)
+  19    91.06    91.65 BEST   -0.60   3.10e-05  OK <2%  (1230s)
+  20    91.54    91.68 BEST   -0.14   2.65e-05  OK <2%  (1244s)
+  21    91.99    91.88 BEST   +0.11   2.21e-05  OK <2%  (1240s)
+  22    92.45    91.77        +0.69   1.81e-05  OK <2%  (1239s)
+  23    92.81    91.75        +1.06   1.43e-05  OK <2%  (1251s)
+  24    92.49    91.95 BEST   +0.54   1.09e-05  OK <2%  (1245s)
+  25    92.44    91.73        +0.71   7.99e-06  OK <2%  (1240s)
+  26    92.01    91.82        +0.20   5.52e-06  OK <2%  (1242s)
+  27    92.87    91.74        +1.13   3.57e-06  OK <2%  (1237s)
+  28    92.77    91.84        +0.93   2.15e-06  OK <2%  (1239s)
+  29    92.80    91.77        +1.03   1.29e-06  OK <2%  (1223s)
+  30    92.77    91.78        +0.99   1.00e-06  OK <2%  (1220s)
+------------------------------------------------------------------------
+
+  Best Val : 91.95 %  @  epoch 24
+
+  Loaded best model – epoch 24  Val 91.95 %
+
+------------------------------------------------------------
+  SWIN FULL EVALUATION
+------------------------------------------------------------
+  Evaluating: 100%|█████████████████████████████████████| 498/498 [01:53<00:00,  4.39it/s]
+
+  Accuracy            : 91.95 %
+  Precision (weighted): 0.9217
+  Recall    (weighted): 0.9195
+  F1-Score  (weighted): 0.9191
+  Precision (macro)   : 0.9121
+  Recall    (macro)   : 0.9104
+  F1-Score  (macro)   : 0.9095
+
+------------------------------------------------------------
+  SWIN PLOTS
+------------------------------------------------------------
+  Saved -> plots_swin\S1_train_val_history.png
+  Saved -> plots_swin\S2_confusion_matrix.png
+  Saved -> plots_swin\S3_roc_curves.png
+  Saved -> plots_swin\S4_f1_per_class.png
+  Saved -> plots_swin\S5_summary_metrics.png
+
+========================================================================
+  TCMP-300  RESUME v3  ─  target 94–95 % ML
+  Stacking | Weighted Ensemble | Feature Cache | Full Plots M1–M12
+========================================================================
+  Device         : cuda
+  GPU            : NVIDIA GeForce RTX 5050 Laptop GPU
+  VRAM           : 8.0 GB
+  TTA            : True
+  Reuse Swin     : True
+  Reuse Features : True
+========================================================================
+
+  Classes : 300
+  Train : 44,134  |  Val : 7,955
+
+  Loading checkpoint …
+  Epoch 24  |  saved val 91.95 %
+
+------------------------------------------------------------
+  SWIN FULL EVALUATION  (all val images)
+------------------------------------------------------------
+  Loading cached Swin predictions …
+
+  Accuracy            : 91.95 %
+  Precision (weighted): 0.9217
+  Recall    (weighted): 0.9195
+  F1-Score  (weighted): 0.9191
+
+  S6 t-SNE already exists, skipping.
+
+------------------------------------------------------------
+  FEATURE EXTRACTION  (multi-scale + TTA)
+------------------------------------------------------------
+  Loading cached PCA features …
+  Train : (44134, 768)
+  Val   : (7955, 768)
+
+------------------------------------------------------------
+  ML CLASSIFIERS  (target > 91.95%  →  94–95 %)
+------------------------------------------------------------
+
+  [SVM-RBF]
+    5-Fold CV  : 93.07 +/- 0.31 %
+    Val Acc    : 92.46 %  (Δ +0.50%)  ✅ BEATS SWIN  [1445s]
+
+  [SVM-RBF-C50]
+    5-Fold CV  : 93.06 +/- 0.32 %
+    Val Acc    : 92.41 %  (Δ +0.45%)  ✅ BEATS SWIN  [1149s]
+
+  [ExtraTrees]
+    5-Fold CV  : 90.99 +/- 0.45 %
+    Val Acc    : 90.60 %  (Δ -1.36%)    [230s]
+
+  [LogisticReg]
+    5-Fold CV  : 93.51 +/- 0.36 %
+    Val Acc    : 91.64 %  (Δ -0.31%)    [36s]
+
+  [MLP]
+    5-Fold CV  : 92.25 +/- 0.47 %
+    Val Acc    : 91.01 %  (Δ -0.94%)    [873s]
+
+  [XGBoost]
+    5-Fold CV  : 88.59 +/- 0.30 %
+    Val Acc    : 89.20 %  (Δ -2.75%)    [1516s]
+
+  [KNN]
+    5-Fold CV  : 90.64 +/- 0.29 %
+    Val Acc    : 91.25 %  (Δ -0.70%)    [8s]
+
+  [LightGBM]
+    5-Fold CV  : 86.82 +/- 0.57 %
+    Val Acc    : 88.27 %  (Δ -3.68%)    [2672s]
+
+------------------------------------------------------------
+  STACKING META-LEARNER
+------------------------------------------------------------
+  OOF members : ['SVM-RBF', 'ExtraTrees', 'LogisticReg', 'MLP', 'LightGBM']
+  Stacking Val Acc : 91.68 %  (Δ -0.28%)    [2s]
+
+------------------------------------------------------------
+  WEIGHTED ENSEMBLE + BLEND
+------------------------------------------------------------
+  Weighted Ensemble: 92.27 %  (Δ +0.31%)  ✅ BEATS SWIN
+  Uniform Ensemble : 92.26 %  (Δ +0.30%)
+
+  Best individual  : SVM-RBF → 92.46 %
+  Swin+WeightedEns   : 92.76 %  (α=0.41, Δ +0.80%)  ✅
+  Swin+Stacking      : 92.55 %  (α=0.14, Δ +0.59%)  ✅
+  Swin+SVM-RBF       : 92.72 %  (α=0.26, Δ +0.77%)  ✅
+
+  ★ BEST OVERALL : Blend_wEns  →  92.76 %
+
+------------------------------------------------------------
+  ML PLOTS  M1–M12
+------------------------------------------------------------
+  Saved -> plots_ml\M1_classifier_comparison.png
+  Saved -> plots_ml\M2_confusion_matrix.png
+  Saved -> plots_ml\M3_roc_curves.png
+  Saved -> plots_ml\M4_f1_per_class.png
+  Saved -> plots_ml\M5_summary_metrics.png
+
+  Computing M6 t-SNE …
+  Saved -> plots_ml\M6_tsne.png
+  Saved -> plots_ml\M7_swin_vs_ml.png
+  Saved -> plots_ml\M8_blend_curve.png
+  Plotting M9 …
+  Saved -> plots_ml\M9_all_candidates.png
+  Plotting M10 …
+  Saved -> plots_ml\M10_calibration.png
+  Plotting M11 …
+  Saved -> plots_ml\M11_per_class_delta.png
+  Plotting M12 …
+  Saved -> plots_ml\M12_stacking_weights.png
+
+========================================================================
+  PIPELINE v3 COMPLETE
+========================================================================
+
+  Swin Transformer   : 91.95 %
+  Stacking Meta-CLF  : 91.68 %  (Δ -0.28%)
+  Weighted Ensemble  : 92.27 %  (Δ +0.31%)
+  Blend_wEns            : 92.76 %  (α=0.41, Δ +0.80%)
+  Blend_Stack           : 92.55 %  (α=0.14, Δ +0.59%)
+  Blend_SVM-RBF         : 92.72 %  (α=0.26, Δ +0.77%)
+
+  ★ BEST : Blend_wEns  →  92.76 %
+  ✅  ML BEATS SWIN  by 0.80 %
+
+  Individual results:
+    ✅ SVM-RBF           : 92.46 %
+    ✅ SVM-RBF-C50       : 92.41 %
+       LogisticReg       : 91.64 %
+       KNN               : 91.25 %
+       MLP               : 91.01 %
+       ExtraTrees        : 90.60 %
+       XGBoost           : 89.20 %
+       LightGBM          : 88.27 %
+
+  Plots  → plots_swin/  (S6)   plots_ml/  (M1–M12)
+========================================================================

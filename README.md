@@ -23,7 +23,6 @@ A deep learning system for identifying Traditional Chinese Medicine (TCM) herb s
 - [Installation](#installation)
 - [Medical Disclaimer](#medical-disclaimer)
 - [License](#license)
-- [Citation](#citation)
 
 ---
 
@@ -43,13 +42,17 @@ The model was trained on **TCMP-300**, a curated dataset of 300 Traditional Chin
 
 **Dataset**: [https://doi.org/10.6084/m9.figshare.29432726](https://doi.org/10.6084/m9.figshare.29432726)
 
+The original dataset contained some corrupted images, which have been filtered out in the version uploaded to Kaggle.
+
+**Kaggle Dataset**: [Cleaned dataset (70:30 Split)](https://www.kaggle.com/datasets/suganthang/tcmp-300)
+
+**Kaggle Dataset**: [Cleaned dataset (85:15 Split)](https://www.kaggle.com/datasets/mainprojectteam/tcmp-300-new-split)
+
+**Kaggle Dataset**: [Truncated dataset for rapid testing (~10 image/class)](https://www.kaggle.com/datasets/suganthang/tcmp-300-short)
+
 **Dataset Paper**: *TCMP-300: A benchmark dataset for Traditional Chinese Medicine plant identification.* Scientific Data (2025). [https://www.nature.com/articles/s41597-025-05522-7](https://www.nature.com/articles/s41597-025-05522-7)
 
-### Base Paper
-
-The methodology and results underlying HerbVision are described in detail in the following publication:
-
-*A hybrid deep learning framework for Traditional Chinese Medicine plant recognition.* Frontiers in Plant Science (2025). [https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1672394/full](https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1672394/full)
+**Base Paper**: *A hybrid deep learning framework for Traditional Chinese Medicine plant recognition.* Frontiers in Plant Science (2025). [https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1672394/full](https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2025.1672394/full)
 
 ---
 
@@ -189,14 +192,21 @@ On Railway deployments with a cold-start, the backend automatically polls `/heal
 herbvision/
 ├── index.html          Single-page frontend (HTML, CSS, JS)
 ├── app.py              Flask backend, model loading, inference endpoints
-├── metadata.json       TCM pharmacological database (300 species)
 ├── requirements.txt    Python dependencies
-├── runtime.txt         Python version pin for Railway
-├── Procfile            Process declaration for Railway deployment
-├── LICENSE             MIT licence
 ├── reference/          Reference images shown for cross verification
+├── codes/              Model codes
+│   ├── support         Supporting files
+│   ├── images          Contains results & visualizations
+│   ├── architecture    Contains codes for diagram generation
+│   └── model_training 
+│       └── Swin-ML Ensemble 3-Stage.ipynb [has the code which got us 92.76%]
 ├── assets/
 │   └── preview.png     Application screenshot for documentation
+├── metadata.json       TCM pharmacological database (300 species)
+├── Procfile            Process declaration for Railway deployment
+├── runtime.txt         Python version pin for Railway
+├── .gitignore
+├── LICENSE             MIT licence
 └── README.md
 ```
 
@@ -258,3 +268,14 @@ hf_cache/swin_best.pth
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+**You are free to:**
+- Use this code for personal, academic, or commercial purposes
+- Modify, adapt, and build upon the code
+- Distribute copies of the original or modified code
+- Deploy in production environments
+
+**No restrictions:**
+- No payment required
+- No attribution mandatory (though appreciated)
+- No warranty or liability
