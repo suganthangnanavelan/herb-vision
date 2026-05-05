@@ -194,10 +194,10 @@ herbvision/
 ├── runtime.txt         Python version pin for Railway
 ├── Procfile            Process declaration for Railway deployment
 ├── LICENSE             MIT licence
-├── README.md
+├── reference/          Reference images shown for cross verification
 ├── assets/
 │   └── preview.png     Application screenshot for documentation
-└── reference/          Reference images shown for cross verification
+└── README.md
 ```
 
 On first startup, `app.py` downloads two files from HuggingFace and caches them locally in `hf_cache/`:
