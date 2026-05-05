@@ -49,7 +49,7 @@ body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-size:16px;l
 .nav-logo-icon{width:36px;height:36px;flex-shrink:0}
 .nav-wordmark{font-family:var(--fd);font-size:1.45rem;font-weight:600;letter-spacing:.01em;color:var(--tx)}
 .nav-wordmark span{color:var(--ac)}
-.nav-center{display:flex;align-items:center;gap:2rem}
+.nav-center{display:flex;align-items:center;gap:2rem;flex:1;justify-content:center}
 .nav-link{font-size:.84rem;color:var(--mu);text-decoration:none;letter-spacing:.02em;transition:color .2s}
 .nav-link:hover{color:var(--tx)}
 .nav-right{display:flex;align-items:center;gap:1rem}
@@ -311,7 +311,7 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
 .fmc-t strong{display:block;font-weight:700;color:var(--ac);font-family:var(--fm);font-size:.74rem}
 .fmc-t span{font-size:.7rem;color:var(--di)}
 .fc-lbl{font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--mu);margin-bottom:1.25rem}
-.fl{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+.fl{list-style:none;display:flex;flex-direction:row;flex-wrap:wrap;gap:.5rem 1.5rem}
 .fl a{font-size:.83rem;color:var(--di);text-decoration:none;transition:color .2s}
 .fl a:hover{color:var(--ac)}
 .fbot{border-top:1px solid var(--bd);padding-top:1.75rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
@@ -337,7 +337,7 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
   .az-grid,.meth-cards{grid-template-columns:1fr}
   .feat-grid{grid-template-columns:repeat(2,1fr)}
   .fg{grid-template-columns:1fr;gap:2rem}
-  .nav-center{display:none}
+  .nav-center{gap:.75rem;font-size:.78rem}
   .hero-stats{grid-template-columns:repeat(2,1fr)}
   .drow-3{grid-template-columns:1fr 1fr}
 }
@@ -376,9 +376,20 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
     <a href="#pipeline" class="nav-link">Pipeline</a>
   </nav>
   <div class="nav-right">
-    <div class="nav-pill"><div class="dot"></div>TCMP-300 · v3</div>
+    <div class="nav-pill" id="nav-pill" style="border-color:rgba(240,180,41,.35);background:rgba(240,180,41,.09)">
+      <div class="dot" id="nav-pill-dot" style="background:#f0b429"></div>
+      <span id="nav-pill-txt" style="color:#f0b429">Loading model…</span>
+    </div>
   </div>
 </nav>
+
+<!-- ══ BACKEND STATUS BANNER ══ -->
+<div id="backend-status-bar" style="display:none;position:sticky;top:66px;z-index:900;align-items:center;gap:12px;padding:10px 2rem;background:rgba(240,180,41,.10);border-bottom:1px solid rgba(240,180,41,.25);backdrop-filter:blur(12px)">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f0b429" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <div style="font-size:.82rem;color:rgba(240,180,41,.9);line-height:1.5">
+    <strong style="color:#f0b429">Backend warming up</strong> — The AI model is loading from HuggingFace (~1–3 min on cold start). Analysis will be available automatically once it's ready.
+  </div>
+</div>
 
 <!-- ══ HERO ══ -->
 <section class="hero" id="home">
@@ -386,7 +397,7 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
   <div class="hero-content">
     <div class="hero-eyebrow"><div class="dot"></div>Traditional Chinese Medicine · Vision Intelligence</div>
     <h1 class="hero-h1">Identify <em>Medicinal</em><br>Plants Instantly</h1>
-    <p class="hero-sub">A two-stage hybrid intelligence pipeline — Swin Transformer backbone fused with an ensemble of 8 specialist classifiers — delivering 92.76% accuracy across 300 TCM herb species.</p>
+    <p class="hero-sub">A three-stage hybrid intelligence pipeline — Swin Transformer backbone fused with an ensemble of 8 specialist classifiers — delivering 92.76% accuracy across 300 TCM herb species.</p>
     <div class="hero-btns">
       <a href="#analyzer" class="btn-p">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -411,7 +422,7 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
 <section class="az-sec" id="analyzer">
   <div class="stag">Analysis Engine</div>
   <h2 class="stit">Plant <em>Recognition</em> System</h2>
-  <p class="sdesc">Upload a clear photograph or capture one live. Our two-stage pipeline classifies the specimen and retrieves full TCM medicinal details.</p>
+  <p class="sdesc">Upload a clear photograph or capture one live. Our three-stage pipeline classifies the specimen and retrieves full TCM medicinal details.</p>
   <div class="az-grid">
 
     <!-- LEFT: Upload + Reference -->
@@ -578,7 +589,7 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
 <section class="meth-sec" id="methodology">
   <div class="meth-inner">
     <div class="stag">Research Architecture</div>
-    <h2 class="stit">Two-Stage <em>Hybrid</em> Pipeline</h2>
+    <h2 class="stit">Three-Stage <em>Hybrid</em> Pipeline</h2>
     <p class="sdesc">A novel system that surpasses what any single model achieves — combining deep visual features from a transformer backbone with a diverse ensemble of specialist classifiers.</p>
     <div class="meth-cards">
       <div class="mc">
@@ -668,8 +679,8 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
     <div class="fg">
       <div>
         <div class="fw">Herb<span>Vision</span></div>
-        <p class="fd-desc">TCM plant identification trained on the TCMP-300 benchmark — 52,089 expert-verified images, 300 species, two-stage hybrid architecture with full TCM pharmacological database.</p>
-        <div class="fmc"><div class="dot"></div><div class="fmc-t"><strong>TCMP-300 Pipeline v3</strong><span>Swin-B + Weighted Ensemble · α=0.41</span></div></div>
+        <p class="fd-desc">TCM plant identification trained on the TCMP-300 benchmark — 52,089 expert-verified images, 300 species, three-stage hybrid architecture with full TCM pharmacological database.</p>
+        <div class="fmc" id="footer-fmc" style="border-color:rgba(240,180,41,.28);background:rgba(240,180,41,.07)"><div class="dot" style="background:#f0b429"></div><div class="fmc-t"><strong id="footer-fmc-label" style="color:#f0b429">Loading model…</strong><span>Swin-B + Weighted Ensemble · α=0.41</span></div></div>
       </div>
       <div>
         <div class="fc-lbl">Navigation</div>
@@ -682,7 +693,7 @@ footer{border-top:1px solid var(--bd);padding:4rem 2rem 2rem}
       </div>
     </div>
     <div class="fbot">
-      <div class="fcopy">© 2025 HerbVision · TCMP-300 Pipeline v3 · Research use</div>
+      <div class="fcopy">© 2025 HerbVision · Swin+ML · Research use</div>
       <div class="fbadges">
         <span class="fbadge">PyTorch</span><span class="fbadge">timm</span><span class="fbadge">Swin-B</span><span class="fbadge">scikit-learn</span>
       </div>
@@ -962,6 +973,17 @@ const MSGS = [
 
 async function runAnalysis() {
   if (!imgData || busy) return;
+
+  if (!backendReady) {
+    flashLoadingBanner();
+    showBackendError(
+      'Model Still Loading',
+      'The AI model is still downloading from HuggingFace. This usually takes 1–3 minutes on a cold start. The page will automatically update when it\'s ready — please try again shortly.',
+      true
+    );
+    return;
+  }
+
   busy = true;
   const btn = document.getElementById('az-btn');
   btn.disabled = true; btn.textContent = 'Analysing…';
@@ -972,8 +994,22 @@ async function runAnalysis() {
   const iv = setInterval(() => { mi = (mi+1) % MSGS.length; scanLbl.textContent = MSGS[mi]; }, 620);
 
   let result;
-  try { result = await callBackend(imgData); }
-  catch(e) { result = mockPredict(); }
+  try {
+    result = await callBackend(imgData);
+  } catch(e) {
+    clearInterval(iv);
+    scanOv.classList.remove('on');
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Unmask This Plant`;
+    busy = false;
+    setStat(upStat, 'Image loaded', 'live');
+    setStat(reStat, 'Error', 'err');
+    const msg = e.message && e.message.includes('timeout')
+      ? 'The request timed out. The model may be busy — please try again.'
+      : 'Could not reach the backend. Please check your connection and try again.';
+    showBackendError('Analysis Failed', msg, false);
+    return;
+  }
 
   await delay(2900);
   clearInterval(iv);
@@ -992,22 +1028,6 @@ async function callBackend(dataUrl) {
   });
   if (!res.ok) throw new Error('backend error');
   return res.json();
-}
-
-function mockPredict() {
-  const unk = Math.random() < 0.11;
-  const shuffled = [...HERBS].sort(() => Math.random() - 0.5);
-  const top5 = shuffled.slice(0, 5);
-  const topConf = unk ? (0.3 + Math.random() * 0.22) : (0.62 + Math.random() * 0.31);
-  const confs = genConfs(topConf, 5);
-  return { unknown: unk, predictions: top5.map((h, i) => ({herb: {...h, class_name: h.com || h.zh}, confidence: confs[i]})) };
-}
-
-function genConfs(top, n) {
-  const c = [top]; let rem = 1 - top;
-  for (let i = 1; i < n-1; i++) { const v = rem*(0.08+Math.random()*.38); c.push(v); rem -= v; }
-  c.push(Math.max(rem, 0.003));
-  return c;
 }
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -1271,30 +1291,124 @@ function showResults(data) {
 }
 
 // ══════════════════════════════════════════════
-// MOCK HERB DATABASE (20 species for offline/fallback)
+// BACKEND HEALTH CHECK
 // ══════════════════════════════════════════════
-const HERBS = [
-  {zh:'人参',py:'Rénshēn',sci:'Panax ginseng',com:'Asian Ginseng',fam:'Araliaceae',nat:'Warm',taste:'Sweet, slightly bitter',mer:'Spleen, Lung, Heart',parts:'Root',props:['Adaptogenic','Immune Enhancer','Qi Tonic'],desc:'The king of TCM tonics, ginseng has been used for over 2000 years to replenish vital energy. Rich in ginsenosides (triterpenoid saponins) with extensive pharmacological research.',uses:'Tonifies yuan qi, replenishes five organ systems, calms spirit, generates fluids. Used for fatigue, cognitive decline, immune deficiency, and recovery from illness.'},
-  {zh:'黄芪',py:'Huáng Qí',sci:'Astragalus membranaceus',com:'Milk Vetch Root',fam:'Fabaceae',nat:'Warm',taste:'Sweet',mer:'Spleen, Lung',parts:'Root',props:['Immune Modulator','Anti-inflammatory','Cardioprotective'],desc:'Strengthens spleen and defensive qi (wei qi). Primary herb for immune deficiency, chronic fatigue, and spontaneous sweating.',uses:'Strengthens wei qi and spleen, lifts sunken yang, promotes urination, generates flesh.'},
-  {zh:'当归',py:'Dāng Guī',sci:'Angelica sinensis',com:'Chinese Angelica',fam:'Apiaceae',nat:'Warm',taste:'Sweet, pungent, bitter',mer:'Liver, Heart, Spleen',parts:'Root',props:['Blood Tonic','Analgesic','Anti-coagulant'],desc:'Nourishes and invigorates blood, regulates menstruation, relieves pain.',uses:'Nourishes blood, invigorates blood, regulates menstruation, moistens intestines, relieves pain.'},
-  {zh:'灵芝',py:'Líng Zhī',sci:'Ganoderma lucidum',com:'Reishi Mushroom',fam:'Ganodermataceae',nat:'Neutral',taste:'Sweet',mer:'Heart, Lung, Liver, Kidney',parts:'Fruiting body',props:['Adaptogenic','Immunomodulatory','Anti-tumor'],desc:'The mushroom of immortality — tonifies qi and calms the heart-spirit.',uses:'Tonifies qi, calms spirit, stops cough and wheezing, nourishes heart blood.'},
-  {zh:'枸杞子',py:'Gǒuqǐ Zǐ',sci:'Lycium barbarum',com:'Wolfberry (Goji)',fam:'Solanaceae',nat:'Neutral',taste:'Sweet',mer:'Liver, Kidney',parts:'Fruit',props:['Antioxidant','Eye Health','Liver Protective'],desc:'Nourishes liver and kidney yin, brightens the eyes.',uses:'Nourishes liver and kidney yin, replenishes essence, brightens eyes.'},
-  {zh:'白术',py:'Bái Zhú',sci:'Atractylodes macrocephala',com:'White Atractylodes',fam:'Asteraceae',nat:'Warm',taste:'Sweet, bitter',mer:'Spleen, Stomach',parts:'Rhizome',props:['Digestive Tonic','Diuretic','Immune Enhancer'],desc:'Strengthens the spleen and augments qi, dries dampness.',uses:'Strengthens spleen qi, dries dampness, stabilizes exterior, stops sweating.'},
-  {zh:'茯苓',py:'Fú Líng',sci:'Poria cocos',com:'Poria Fungus',fam:'Polyporaceae',nat:'Neutral',taste:'Sweet, bland',mer:'Heart, Spleen, Lung, Kidney',parts:'Sclerotium',props:['Sedative','Diuretic','Immune Modulator'],desc:'Leaches out dampness, strengthens spleen, quiets heart spirit.',uses:'Promotes urination, leaches dampness, strengthens spleen, calms heart spirit.'},
-  {zh:'川芎',py:'Chuān Xiōng',sci:'Ligusticum chuanxiong',com:'Sichuan Lovage',fam:'Apiaceae',nat:'Warm',taste:'Pungent',mer:'Liver, Gallbladder, Pericardium',parts:'Rhizome',props:['Analgesic','Vasodilator','Blood Activator'],desc:'Invigorates blood, promotes qi movement, relieves pain. Primary TCM herb for headaches.',uses:'Invigorates blood, promotes qi movement, expels wind, relieves pain.'},
-  {zh:'甘草',py:'Gān Cǎo',sci:'Glycyrrhiza uralensis',com:'Licorice Root',fam:'Fabaceae',nat:'Neutral',taste:'Sweet',mer:'Heart, Lung, Spleen, Stomach',parts:'Root & rhizome',props:['Anti-inflammatory','Antispasmodic','Harmonizing'],desc:'The peacemaker herb — tonifies spleen, moistens lungs, harmonizes formulas.',uses:'Tonifies spleen qi, moistens lungs, clears heat, detoxifies, harmonizes other herbs.'},
-  {zh:'丹参',py:'Dān Shēn',sci:'Salvia miltiorrhiza',com:'Red Sage Root',fam:'Lamiaceae',nat:'Cool',taste:'Bitter',mer:'Heart, Pericardium, Liver',parts:'Root',props:['Cardiovascular','Blood Activator','Neuroprotective'],desc:'Activates blood, removes stasis, cools blood.',uses:'Invigorates blood, breaks stasis, cools blood, calms spirit, clears heat.'},
-  {zh:'黄连',py:'Huáng Lián',sci:'Coptis chinensis',com:'Chinese Goldthread',fam:'Ranunculaceae',nat:'Cold',taste:'Bitter',mer:'Heart, Liver, Stomach, Large Intestine',parts:'Rhizome',props:['Antimicrobial','Anti-diabetic','Antipyretic'],desc:'Clears heat, dries dampness, drains fire toxicity. Berberine is a leading research compound.',uses:'Clears heat, dries dampness, drains fire, resolves toxicity, kills parasites.'},
-  {zh:'熟地黄',py:'Shú Dì Huáng',sci:'Rehmannia glutinosa',com:'Prepared Rehmannia',fam:'Orobanchaceae',nat:'Warm',taste:'Sweet',mer:'Liver, Kidney, Heart',parts:'Root (prepared)',props:['Blood Tonic','Yin Nourishing','Anti-aging'],desc:'Nourishes yin and replenishes essence, tonifies blood.',uses:'Nourishes yin, tonifies blood, replenishes essence and marrow.'},
-  {zh:'白芍',py:'Bái Sháo',sci:'Paeonia lactiflora',com:'White Peony Root',fam:'Paeoniaceae',nat:'Cool',taste:'Bitter, sour',mer:'Liver, Spleen',parts:'Root',props:['Muscle Relaxant','Analgesic','Hepatoprotective'],desc:'Nourishes blood, softens liver, relieves pain and spasms.',uses:'Nourishes blood, calms liver yang, softens liver, relieves pain.'},
-  {zh:'柴胡',py:'Chái Hú',sci:'Bupleurum chinense',com:'Chinese Thoroughwax',fam:'Apiaceae',nat:'Slightly Cold',taste:'Pungent, bitter',mer:'Liver, Gallbladder',parts:'Root',props:['Anti-depressant','Hepatoprotective','Anti-inflammatory'],desc:'Disperses shaoyang disorders, courses liver, relieves constraint.',uses:'Resolves shaoyang, courses liver qi, relieves constraint, raises yang.'},
-  {zh:'半夏',py:'Bàn Xià',sci:'Pinellia ternata',com:'Pinellia Rhizome',fam:'Araceae',nat:'Warm',taste:'Pungent',mer:'Spleen, Stomach, Lung',parts:'Tuber (rhizome)',props:['Antiemetic','Expectorant','Antitussive'],desc:'Dries dampness, transforms phlegm, directs rebellious qi downward.',uses:'Dries dampness, transforms phlegm, descends qi, stops vomiting.'},
-  {zh:'陈皮',py:'Chén Pí',sci:'Citrus reticulata',com:'Aged Tangerine Peel',fam:'Rutaceae',nat:'Warm',taste:'Pungent, bitter',mer:'Spleen, Lung',parts:'Dried peel',props:['Digestive Aid','Expectorant','Antispasmodic'],desc:'Regulates qi, strengthens spleen, dries dampness and transforms phlegm.',uses:'Regulates qi, strengthens spleen, dries dampness, transforms phlegm.'},
-  {zh:'麦冬',py:'Mài Dōng',sci:'Ophiopogon japonicus',com:'Dwarf Lilyturf Tuber',fam:'Asparagaceae',nat:'Cool',taste:'Sweet, slightly bitter',mer:'Heart, Lung, Stomach',parts:'Root tuber',props:['Yin Nourishing','Cardioprotective','Anti-diabetic'],desc:'Nourishes yin and moistens dryness, clears heat, quiets the heart.',uses:'Nourishes stomach and lung yin, clears heat, moistens dryness, calms spirit.'},
-  {zh:'黄精',py:'Huáng Jīng',sci:'Polygonatum sibiricum',com:"Siberian Solomon's Seal",fam:'Asparagaceae',nat:'Neutral',taste:'Sweet',mer:'Spleen, Lung, Kidney',parts:'Rhizome',props:['Qi Tonic','Anti-aging','Immune Enhancer'],desc:'Supplements jing, qi, and shen. Polysaccharides show immune-modulating effects.',uses:'Tonifies spleen qi and yin, moistens lung, replenishes kidney essence.'},
-  {zh:'牡丹皮',py:'Mǔ Dān Pí',sci:'Paeonia suffruticosa',com:'Tree Peony Root Bark',fam:'Paeoniaceae',nat:'Cool',taste:'Bitter, pungent',mer:'Heart, Liver, Kidney',parts:'Root bark',props:['Anti-inflammatory','Blood Activator','Antipyretic'],desc:'Clears heat from blood, invigorates blood and dispels stasis.',uses:'Clears heat, cools blood, invigorates blood, dispels stasis, drains pus.'},
-  {zh:'薄荷',py:'Bò He',sci:'Mentha haplocalyx',com:'Field Mint',fam:'Lamiaceae',nat:'Cool',taste:'Pungent',mer:'Liver, Lung',parts:'Aerial parts',props:['Diaphoretic','Analgesic','Antimicrobial'],desc:'Disperses wind-heat, clears head and eyes, smooths liver qi.',uses:'Disperses wind-heat, clears head and eyes, benefits throat, smooths liver qi.'},
-];
+let backendReady = false;
+let backendCheckInterval = null;
+
+async function checkBackendHealth() {
+  try {
+    const res = await fetch('/health', { signal: AbortSignal.timeout(6000) });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.status === 'ok') {
+        if (!backendReady) {
+          backendReady = true;
+          clearInterval(backendCheckInterval);
+          backendCheckInterval = null;
+          setBackendStatusBanner(false);
+          setStat(document.getElementById('re-stat'), 'Ready', '');
+          // Clear any error state if showing
+          const errEl = document.getElementById('re-error');
+          if (errEl && errEl.classList.contains('show')) {
+            errEl.classList.remove('show');
+            document.getElementById('re-empty').style.display = '';
+          }
+        }
+        return;
+      }
+    }
+  } catch(e) { /* backend not yet up */ }
+  if (backendReady) return; // don't revert if already confirmed ready
+  setBackendStatusBanner(true);
+}
+
+function setBackendStatusBanner(loading) {
+  const bar = document.getElementById('backend-status-bar');
+  const pill = document.getElementById('nav-pill');
+  const pillDot = document.getElementById('nav-pill-dot');
+  const pillTxt = document.getElementById('nav-pill-txt');
+  const fmc = document.getElementById('footer-fmc');
+  const fmcLabel = document.getElementById('footer-fmc-label');
+  if (!bar) return;
+  if (!loading) {
+    bar.style.display = 'none';
+    // Nav pill → green "Swin+ML"
+    if (pill) {
+      pill.style.borderColor = 'rgba(34,212,138,.22)';
+      pill.style.background  = 'rgba(34,212,138,.07)';
+    }
+    if (pillDot) { pillDot.style.background = '#22d48a'; }
+    if (pillTxt) { pillTxt.style.color = '#22d48a'; pillTxt.textContent = 'Swin+ML'; }
+    // Footer fmc → green "Swin+ML"
+    if (fmc) {
+      fmc.style.borderColor = 'rgba(34,212,138,.18)';
+      fmc.style.background  = 'rgba(34,212,138,.07)';
+      const dot = fmc.querySelector('.dot');
+      if (dot) dot.style.background = '#22d48a';
+    }
+    if (fmcLabel) { fmcLabel.style.color = '#22d48a'; fmcLabel.textContent = 'Swin+ML'; }
+  } else {
+    bar.style.display = 'flex';
+    // Nav pill → warning amber
+    if (pill) {
+      pill.style.borderColor = 'rgba(240,180,41,.35)';
+      pill.style.background  = 'rgba(240,180,41,.09)';
+    }
+    if (pillDot) { pillDot.style.background = '#f0b429'; }
+    if (pillTxt) { pillTxt.style.color = '#f0b429'; pillTxt.textContent = 'Loading model…'; }
+    // Footer fmc → warning amber
+    if (fmc) {
+      fmc.style.borderColor = 'rgba(240,180,41,.28)';
+      fmc.style.background  = 'rgba(240,180,41,.07)';
+      const dot = fmc.querySelector('.dot');
+      if (dot) dot.style.background = '#f0b429';
+    }
+    if (fmcLabel) { fmcLabel.style.color = '#f0b429'; fmcLabel.textContent = 'Loading model…'; }
+  }
+}
+
+function flashLoadingBanner() {
+  const bar = document.getElementById('backend-status-bar');
+  if (!bar) return;
+  // Scroll banner into view
+  bar.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Flash the banner border and background
+  const origBg     = bar.style.background;
+  const origBorder = bar.style.borderBottom;
+  bar.style.transition = 'background .15s, border-bottom-color .15s';
+  bar.style.background = 'rgba(240,180,41,.22)';
+  bar.style.borderBottom = '1px solid rgba(240,180,41,.7)';
+  setTimeout(() => {
+    bar.style.background  = origBg || 'rgba(240,180,41,.10)';
+    bar.style.borderBottom = origBorder || '1px solid rgba(240,180,41,.25)';
+  }, 420);
+  // Second flash
+  setTimeout(() => {
+    bar.style.background = 'rgba(240,180,41,.22)';
+    bar.style.borderBottom = '1px solid rgba(240,180,41,.7)';
+  }, 560);
+  setTimeout(() => {
+    bar.style.background  = origBg || 'rgba(240,180,41,.10)';
+    bar.style.borderBottom = origBorder || '1px solid rgba(240,180,41,.25)';
+  }, 900);
+}
+
+function showBackendError(title, message, isLoading) {
+  document.getElementById('re-empty').style.display = 'none';
+  document.getElementById('re-content').classList.remove('show');
+  const errEl = document.getElementById('re-error');
+  document.getElementById('re-error-title').textContent = title;
+  document.getElementById('re-error-msg').textContent = message;
+  const spinner = document.getElementById('re-error-spinner');
+  if (spinner) spinner.style.display = isLoading ? 'block' : 'none';
+  errEl.classList.add('show');
+  setStat(document.getElementById('re-stat'), isLoading ? 'Warming up…' : 'Error', isLoading ? 'warn' : 'err');
+}
+
+// Start health polling immediately on page load
+checkBackendHealth();
+backendCheckInterval = setInterval(checkBackendHealth, 7000);
 
 // NAV scroll effect
 window.addEventListener('scroll', () => {
