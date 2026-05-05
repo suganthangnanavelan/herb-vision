@@ -1,6 +1,6 @@
 # HerbVision
 
-[![Website Status](https://img.shields.io/website?down_color=red&down_message=offline&label=System%20Status&up_color=success&up_message=online&url=https%3A%2F%2Fherbvision.online%2Fhealth)](https://herbvision.online/health)
+[![System Status](https://img.shields.io/website?down_color=red&down_message=offline&label=Website%20Status&up_color=success&up_message=online&url=https%3A%2F%2Fherbvision.online%2Fhealth)](https://herbvision.online/health)
 [![Model on HuggingFace](https://img.shields.io/badge/Hugging_Face-Model_Hub-orange)](https://huggingface.co/SuganthanGnanavelan/herbvision/tree/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Accuracy](https://img.shields.io/badge/Accuracy-92.76%25-green)](#performance)
